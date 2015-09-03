@@ -1,9 +1,11 @@
-package com.proj.andoid.nownews;
+package com.proj.andoid.nownews.UI.Activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.proj.andoid.nownews.R;
 
 public class MainActivity extends AppCompatActivity {
 
