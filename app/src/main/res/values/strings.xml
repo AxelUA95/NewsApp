@@ -1,6 +1,12 @@
 <resources>
-    <string name="app_name">NowNews</string>
+    <string name="app_name" translatable="false">NowNews</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+    <string-array name="tab_titles">
+        <item name="news_tab">News</item>
+        <item name="images_tab">Images</item>
+        <item name="post_tab">Posts</item>
+    </string-array>
+
 </resources>
