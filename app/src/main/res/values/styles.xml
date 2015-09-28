@@ -2,8 +2,8 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/primaryColorPurple</item>
-        <item name="colorPrimaryDark">@color/primaryColorPurpleDark</item>
+        <item name="colorPrimary">@color/primaryColorIndigo</item>
+        <item name="colorPrimaryDark">@color/primaryColorIndigoDark</item>
     </style>
 
 </resources>
