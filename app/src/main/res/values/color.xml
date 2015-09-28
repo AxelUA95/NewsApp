@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
-    <color name="primaryColorPurple">#673AB7</color>
-    <color name="primaryColorPurpleDark">#5E35B1</color>
+    <color name="primaryColorIndigo">#3F51B5</color>
+    <color name="primaryColorIndigoDark">#3949AB</color>
     <color name="tabsScrollColor">#FFFFFF</color>
     
 </resources>

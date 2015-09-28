@@ -13,6 +13,7 @@ import com.proj.andoid.nownews.config.AppPreferences;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 
 /**
  * created by Alex Ivanov on 05.09.15.
@@ -23,6 +24,7 @@ public abstract class BaseFragment extends Fragment{
 
     @Inject
     protected AppPreferences prefs;
+    protected EventBus BUS;
 
     protected abstract int getContentView();
 
@@ -31,6 +33,7 @@ public abstract class BaseFragment extends Fragment{
         super.onCreate(savedInstanceState);
         NewsApp.getComponent().inject(this);
         setRetainInstance(true);
+        BUS = EventBus.getDefault();
     }
 
     @Nullable

@@ -1,12 +1,18 @@
 <resources>
     <string name="app_name" translatable="false">NowNews</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="drawer_open">Navigation drawer opened</string>
+    <string name="drawer_close">Navigation drawer closed</string>
 
-    <string-array name="tab_titles">
+    <string-array name="titles">
         <item name="news_tab">News</item>
         <item name="images_tab">Images</item>
         <item name="post_tab">Posts</item>
+        <item name="action_settings">Settings</item>
     </string-array>
+
+    <string name="image_content_description">web image</string>
+    <string name="provider_content_description">service image provider</string>
+    <string name="drawer_image">Icon for drawer item</string>
 
 </resources>

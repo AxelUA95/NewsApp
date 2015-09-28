@@ -5,7 +5,7 @@ import com.proj.andoid.nownews.R;
 /**
  * created by Alex Ivanov on 07.09.15.
  */
-public class PostTabFragment extends BaseFragment {
+public class PostFragment extends BaseFragment {
 
     @Override
     protected int getContentView() {
