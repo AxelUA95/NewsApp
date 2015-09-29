@@ -14,5 +14,6 @@
     <string name="image_content_description">web image</string>
     <string name="provider_content_description">service image provider</string>
     <string name="drawer_image">Icon for drawer item</string>
+    <string name="search_location">Search using location</string>
 
 </resources>

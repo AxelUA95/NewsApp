@@ -1,5 +1,6 @@
 package com.proj.andoid.nownews.ui.fragments;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 
 import com.proj.andoid.nownews.R;
 import com.proj.andoid.nownews.event.FlickrDataReceiveEvent;
+import com.proj.andoid.nownews.event.SearchByLocationEvent;
 import com.proj.andoid.nownews.model.FlickrResponseModel;
 import com.proj.andoid.nownews.utils.ApiLoader;
 import com.proj.andoid.nownews.utils.Contants;
@@ -33,6 +35,9 @@ public class ImagesFragment extends BaseFragment {
     private ImageAdapter imageAdapter;
     private LinearLayoutManager layoutManager;
     private int page;
+    private Location lastLocation;
+    private ApiLoader loader;
+
 
     @Override
     protected int getContentView() {
@@ -42,6 +47,7 @@ public class ImagesFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        loader = new ApiLoader();
         imageRecycler.setHasFixedSize(true);
         imageAdapter = new ImageAdapter();
         imageRecycler.setItemAnimator(new DefaultItemAnimator());
@@ -61,8 +67,9 @@ public class ImagesFragment extends BaseFragment {
                 super.onScrollStateChanged(recyclerView, newState);
                 int lastVisible = layoutManager.findLastVisibleItemPosition();
                 int count = layoutManager.getItemCount() - 1;
-                if (count == lastVisible) {
-                    new ApiLoader().loadFlickrByTag(++page);
+                if (count == lastVisible && count != 0) {
+                    page++;
+                    searchLocation();
                 }
             }
 
@@ -79,10 +86,24 @@ public class ImagesFragment extends BaseFragment {
         BUS.unregister(this);
     }
 
+    private void searchLocation() {
+        if (lastLocation != null) {
+            loader.loadFlickrByLocation(lastLocation.getLatitude(),
+                    lastLocation.getLongitude(), page);
+        }
+    }
+
     @SuppressWarnings("unused")
     @Subscribe
     public void onEvent(FlickrDataReceiveEvent event) {
         imageAdapter.addPhotoItems(event.getFlickrResponseModel().getPhotos().getPhoto());
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onEvent(SearchByLocationEvent event) {
+        lastLocation = event.getLocation();
+        searchLocation();
     }
 
     private class ImageAdapter extends RecyclerView.Adapter<ImageViewHolder> {
