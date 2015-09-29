@@ -148,7 +148,7 @@ public class MainActivity extends BaseActivity implements
                 case 2:
                     return new PostFragment();
                 default:
-                    return null;
+                    return new ImagesFragment();
             }
         }
 
