@@ -1,6 +1,7 @@
 package com.proj.andoid.nownews.ui.activities;
 
 import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,19 +10,27 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.proj.andoid.nownews.R;
+import com.proj.andoid.nownews.event.SearchByLocationEvent;
 import com.proj.andoid.nownews.ui.fragments.ImagesFragment;
 
 import butterknife.Bind;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     @Bind(R.id.main_toolbar)
     protected Toolbar toolbar;
@@ -29,7 +38,7 @@ public class MainActivity extends BaseActivity {
     protected RecyclerView drawerRecyclerView;
 
     private FragmentManager fragmentManager;
-
+    private GoogleApiClient googleApiClient;
 
     @Override
     protected int getContentView() {
@@ -42,6 +51,13 @@ public class MainActivity extends BaseActivity {
         setSupportActionBar(toolbar);
 
         setupDrawer();
+
+        //set up location api client
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
     }
 
     @Override
@@ -49,6 +65,16 @@ public class MainActivity extends BaseActivity {
         super.onStart();
         fragmentManager = getSupportFragmentManager();
         useFragment(new ImagesFragment());
+        Log.d(tag, "Connecting to location service");
+        googleApiClient.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (googleApiClient.isConnected()) {
+            Log.d(tag, "Disconnecting from location service");
+        }
     }
 
     @Override
@@ -59,6 +85,14 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.action_search_location: {
+                searchByLocation();
+            }
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -93,6 +127,34 @@ public class MainActivity extends BaseActivity {
 
     private void useFragment(Fragment fragment) {
         fragmentManager.beginTransaction().replace(R.id.main_container, fragment).commit();
+    }
+
+    private void searchByLocation() {
+        if (!googleApiClient.isConnected()) {
+            googleApiClient.connect();
+            return;
+        }
+
+        Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+        BUS.post(new SearchByLocationEvent(lastLocation));
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.i(tag, "Successfully connected to location service");
+        searchByLocation();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.i(tag, "GoogleApiClient suspended");
+        googleApiClient.connect();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.e(tag, "Error connecting to location service");
+        Toast.makeText(this, "Cannot access location", Toast.LENGTH_SHORT).show();
     }
 
     private enum DrawerItem {
