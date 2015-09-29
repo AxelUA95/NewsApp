@@ -19,12 +19,14 @@ public class ApiLoader {
 
     private final String tag = getClass().getName();
     private FlickrAPIService flickrAPIService;
+    private EventBus BUS;
 
     public ApiLoader() {
         flickrAPIService = new RestAdapter.Builder()
                 .setEndpoint(Contants.FlickrURL)
                 .build()
                 .create(FlickrAPIService.class);
+        BUS = EventBus.getDefault();
     }
 
     public void loadFlickrByTag(int page) {
@@ -32,7 +34,7 @@ public class ApiLoader {
             @Override
             public void success(FlickrResponseModel flickrResponseModel, Response response) {
                 if (flickrResponseModel.getStat().equals("ok")) {
-                    EventBus.getDefault().post(new FlickrDataReceiveEvent(flickrResponseModel));
+                    BUS.post(new FlickrDataReceiveEvent(flickrResponseModel));
                 } else {
                     Log.e(tag, "error loading Flickr data, check url");
                 }
@@ -41,6 +43,27 @@ public class ApiLoader {
             @Override
             public void failure(RetrofitError error) {
                 Log.e(tag, "error loading FlickrData", error);
+            }
+        });
+    }
+
+    public void loadFlickrByLocation(double latitude, double longitude, int pageNum) {
+        String lat = String.valueOf(latitude);
+        String lon = String.valueOf(longitude);
+        String page = String.valueOf(pageNum);
+        flickrAPIService.getByLocation(lat, lon, "10", "km", "10", page, new Callback<FlickrResponseModel>() {
+            @Override
+            public void success(FlickrResponseModel flickrResponseModel, Response response) {
+                if (flickrResponseModel.getStat().equals("ok")) {
+                    BUS.post(new FlickrDataReceiveEvent(flickrResponseModel));
+                } else {
+                    Log.e(tag, "error loading Flickr data, check url");
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(tag, "Error loading flickr data by location", error);
             }
         });
     }
