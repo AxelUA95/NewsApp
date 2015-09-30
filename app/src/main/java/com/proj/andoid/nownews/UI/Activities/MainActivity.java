@@ -35,6 +35,7 @@ public class MainActivity extends BaseActivity implements
     @Bind(R.id.main_view_pager)
     protected ViewPager mainPager;
 
+    private boolean locationSearch;
     private GoogleApiClient googleApiClient;
 
     @Override
@@ -102,6 +103,7 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void searchByLocation() {
+        if (locationSearch) return;
         if (!googleApiClient.isConnected()) {
             googleApiClient.connect();
             return;
@@ -109,6 +111,7 @@ public class MainActivity extends BaseActivity implements
 
         Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         BUS.post(new SearchByLocationEvent(lastLocation));
+        locationSearch = true;
     }
 
     @Override
