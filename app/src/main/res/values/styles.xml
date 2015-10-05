@@ -4,16 +4,6 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryColorDark</item>
-        <item name="searchViewStyle">@style/AppSearchView</item>
-    </style>
-
-    <style name="AppSearchView" parent="Widget.AppCompat.SearchView">
-        <item name="android:textCursorDrawable">@drawable/white_cursor</item>
-        <item name="queryBackground">@android:color/transparent</item>
-        <item name="searchIcon">@drawable/ic_action_search</item>
-        <item name="closeIcon">@drawable/ic_action_remove</item>
-        <item name="android:queryHint">@string/search_hint</item>
-        <item name="android:imeActionId">6</item>
     </style>
 
 </resources>

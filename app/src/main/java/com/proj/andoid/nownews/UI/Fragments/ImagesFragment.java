@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import com.proj.andoid.nownews.R;
 import com.proj.andoid.nownews.event.FlickrDataReceiveEvent;
 import com.proj.andoid.nownews.event.SearchByLocationEvent;
+import com.proj.andoid.nownews.event.SearchByTagEvent;
 import com.proj.andoid.nownews.model.FlickrResponseModel;
 import com.proj.andoid.nownews.utils.ApiLoader;
 import com.proj.andoid.nownews.utils.Contants;
@@ -96,14 +97,25 @@ public class ImagesFragment extends BaseFragment {
     @SuppressWarnings("unused")
     @Subscribe
     public void onEvent(FlickrDataReceiveEvent event) {
+        if (page == 1 && imageAdapter.getItemCount() != 0) {
+            imageAdapter.deleteAllItems();
+        }
         imageAdapter.addPhotoItems(event.getFlickrResponseModel().getPhotos().getPhoto());
     }
 
     @SuppressWarnings("unused")
     @Subscribe
     public void onEvent(SearchByLocationEvent event) {
+        page = 1;
         lastLocation = event.getLocation();
         searchLocation();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onEvent(SearchByTagEvent event) {
+        page = 1;
+        loader.loadFlickrByTag(event.getTag(), page);
     }
 
     private class ImageAdapter extends RecyclerView.Adapter<ImageViewHolder> {
@@ -115,8 +127,15 @@ public class ImagesFragment extends BaseFragment {
         }
 
         public void addPhotoItems(List<FlickrResponseModel.Photo> images) {
+            int count = photos.size();
             photos.addAll(images);
-            notifyDataSetChanged();
+            notifyItemRangeInserted(count, images.size());
+        }
+
+        public void deleteAllItems() {
+            int count = photos.size();
+            photos.clear();
+            notifyItemRangeRemoved(0, count);
         }
 
         @Override
