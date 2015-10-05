@@ -1,15 +1,18 @@
 package com.proj.andoid.nownews.ui.activities;
 
+import android.app.SearchManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -17,6 +20,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.proj.andoid.nownews.R;
 import com.proj.andoid.nownews.event.SearchByLocationEvent;
+import com.proj.andoid.nownews.event.SearchByTagEvent;
 import com.proj.andoid.nownews.ui.fragments.ImagesFragment;
 import com.proj.andoid.nownews.ui.fragments.NewsFragment;
 import com.proj.andoid.nownews.ui.fragments.PostFragment;
@@ -26,7 +30,8 @@ import butterknife.Bind;
 
 public class MainActivity extends BaseActivity implements
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener,
+        SearchView.OnQueryTextListener {
 
     @Bind(R.id.main_toolbar)
     protected Toolbar toolbar;
@@ -35,6 +40,7 @@ public class MainActivity extends BaseActivity implements
     @Bind(R.id.main_view_pager)
     protected ViewPager mainPager;
 
+    private boolean locationSearch;
     private GoogleApiClient googleApiClient;
 
     @Override
@@ -45,6 +51,7 @@ public class MainActivity extends BaseActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        locationSearch = false;
         setSupportActionBar(toolbar);
 
         mainPager.setAdapter(new ViewPagerAdapter(
@@ -85,6 +92,14 @@ public class MainActivity extends BaseActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setQueryHint(getString(R.string.search_hint));
+        searchView.setOnQueryTextListener(this);
+        searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+
         return true;
     }
 
@@ -95,6 +110,7 @@ public class MainActivity extends BaseActivity implements
         switch (id) {
             case R.id.action_search_location: {
                 searchByLocation();
+                return true;
             }
         }
 
@@ -102,6 +118,7 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void searchByLocation() {
+        if (locationSearch) return;
         if (!googleApiClient.isConnected()) {
             googleApiClient.connect();
             return;
@@ -109,6 +126,7 @@ public class MainActivity extends BaseActivity implements
 
         Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         BUS.post(new SearchByLocationEvent(lastLocation));
+        locationSearch = true;
     }
 
     @Override
@@ -127,6 +145,18 @@ public class MainActivity extends BaseActivity implements
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.e(tag, "Error connecting to location service");
         Toast.makeText(this, "Cannot access location", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        BUS.post(new SearchByTagEvent(query.trim()));
+        locationSearch = false;
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
     }
 
     private class ViewPagerAdapter extends FragmentStatePagerAdapter {

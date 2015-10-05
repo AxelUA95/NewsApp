@@ -12,7 +12,7 @@
     <string name="image_content_description">web image</string>
     <string name="provider_content_description">service image </string>
     <string name="drawer_image">Icon for drawer item</string>
-    <string name="search_hint">Type tag or location</string>
+    <string name="search_hint">Type tag</string>
     <string name="remove">Remove</string>
     <string name="search_location">Search using location</string>
 

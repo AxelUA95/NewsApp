@@ -29,8 +29,8 @@ public class ApiLoader {
         BUS = EventBus.getDefault();
     }
 
-    public void loadFlickrByTag(int page) {
-        flickrAPIService.getByTag("kiev", "10", String.valueOf(page), new Callback<FlickrResponseModel>() {
+    public void loadFlickrByTag(String flTag, int page) {
+        flickrAPIService.getByTag(flTag, "10", String.valueOf(page), new Callback<FlickrResponseModel>() {
             @Override
             public void success(FlickrResponseModel flickrResponseModel, Response response) {
                 if (flickrResponseModel.getStat().equals("ok")) {
