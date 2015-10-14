@@ -54,20 +54,15 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public void insertFlickrData(List<Photo> photos) {
-        List<ContentValues> cvList = new ArrayList<>();
-        for (Photo imageData : photos) {
-            cvList.add(getContentValues(imageData));
-        }
         SQLiteDatabase database = getWritableDatabase();
         database.beginTransaction();
-        try {
-            database.delete(FlickrEntry.TABLE_NAME, null, null);
-            for (ContentValues cv : cvList) {
-                database.insert(FlickrEntry.TABLE_NAME, null, cv);
-            }
-        } finally {
-            database.endTransaction();
+        database.delete(FlickrEntry.TABLE_NAME, null, null);
+        for (Photo imageData : photos) {
+            ContentValues cv = getContentValues(imageData);
+            database.insert(FlickrEntry.TABLE_NAME, null, cv);
         }
+        database.setTransactionSuccessful();
+        database.endTransaction();
     }
 
     public List<Photo> loadFlickrData() {

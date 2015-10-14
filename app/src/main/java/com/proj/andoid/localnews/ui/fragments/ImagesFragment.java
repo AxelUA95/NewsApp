@@ -1,6 +1,8 @@
 package com.proj.andoid.localnews.ui.fragments;
 
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +14,7 @@ import android.widget.ProgressBar;
 
 import com.proj.andoid.localnews.R;
 import com.proj.andoid.localnews.api.FlickrLoader;
+import com.proj.andoid.localnews.events.DataSavedEvent;
 import com.proj.andoid.localnews.events.FlickrResponceEvent;
 import com.proj.andoid.localnews.model.flickr.Photo;
 import com.proj.andoid.localnews.utils.Utils;
@@ -33,6 +36,8 @@ public class ImagesFragment extends BaseFragment {
 
     @Bind(R.id.tab_recycler_view)
     protected RecyclerView recyclerView;
+    @Bind(R.id.fragments_coordinator_layout)
+    protected CoordinatorLayout coordinatorLayout;
 
     private RecyclerAdapter adapter;
     private LinearLayoutManager layoutManager;
@@ -78,6 +83,7 @@ public class ImagesFragment extends BaseFragment {
         });
         loader = new FlickrLoader();
         loader.loadByTag("Kiev");
+        database.loadFlickrData();
     }
 
     @Override
@@ -95,7 +101,32 @@ public class ImagesFragment extends BaseFragment {
     @SuppressWarnings("unused")
     @Subscribe
     public void onEvent(FlickrResponceEvent event) {
-        adapter.addPhotos(event.getModel().getPhotos().getPhoto());
+        if (event.hasSearchTypeChanged()) {
+            adapter.deleteAllPhotos();
+        }
+        adapter.addPhotos(event.getModel());
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onEvent(DataSavedEvent event) {
+        switch (event.getType()) {
+            case DataSavedEvent.FLICKR_SAVED : {
+                if (adapter.getItemCount() == 0) {
+                    database.loadFlickrData();
+                } else {
+                    Snackbar.make(coordinatorLayout, R.string.new_data_loaded,
+                            Snackbar.LENGTH_INDEFINITE).setAction(R.string.refresh,
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    database.loadFlickrData();
+                                }
+                            }).show();
+                }
+                break;
+            }
+        }
     }
 
     private class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {

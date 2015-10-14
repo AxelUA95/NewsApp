@@ -3,9 +3,13 @@ package com.proj.andoid.localnews.api;
 import android.location.Location;
 import android.util.Log;
 
+import com.proj.andoid.localnews.NewsApp;
+import com.proj.andoid.localnews.config.AppDatabase;
 import com.proj.andoid.localnews.events.FlickrResponceEvent;
 import com.proj.andoid.localnews.model.flickr.FlickrResponseModel;
 import com.proj.andoid.localnews.utils.Utils;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 import retrofit.Callback;
@@ -17,6 +21,9 @@ import retrofit.client.Response;
  * created by Alex Ivanov on 11.10.15.
  */
 public class FlickrLoader implements Callback<FlickrResponseModel> {
+
+    @Inject
+    protected AppDatabase database;
 
     private String tag = getClass().getName();
     private FlickrAPIService apiService;
@@ -34,6 +41,7 @@ public class FlickrLoader implements Callback<FlickrResponseModel> {
                 .build()
                 .create(FlickrAPIService.class);
         page = 0;
+        NewsApp.getComponent().inject(this);
     }
 
     public void loadByLocation(Location position) {
@@ -85,8 +93,13 @@ public class FlickrLoader implements Callback<FlickrResponseModel> {
     @Override
     public void success(FlickrResponseModel flickrResponseModel, Response response) {
         if (flickrResponseModel.getStat().equals("ok")) {
-            EventBus.getDefault().post(
-                    new FlickrResponceEvent(flickrResponseModel.getPhotos().getPhoto(), hasSearchTypeChanged));
+            if (flickrResponseModel.getPhotos().getPage() == 1 && !loadByLocation) {
+                database.saveFlickrData(flickrResponseModel.getPhotos().getPhoto());
+            } else {
+                EventBus.getDefault().post(
+                        new FlickrResponceEvent(flickrResponseModel.getPhotos().getPhoto(),
+                                hasSearchTypeChanged));
+            }
         } else {
             Log.e(tag, "error loading Flickr data, check url");
         }

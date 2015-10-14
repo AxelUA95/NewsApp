@@ -14,4 +14,7 @@
     <string name="search_hint">Type tag</string>
     <string name="remove">Remove</string>
     <string name="search_location">Search using location</string>
+
+    <string name="new_data_loaded">New data is loaded</string>
+    <string name="refresh">Refresh</string>
 </resources>

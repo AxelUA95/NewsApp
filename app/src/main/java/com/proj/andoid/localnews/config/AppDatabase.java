@@ -3,11 +3,14 @@ package com.proj.andoid.localnews.config;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.proj.andoid.localnews.events.DataSavedEvent;
 import com.proj.andoid.localnews.events.FlickrResponceEvent;
 import com.proj.andoid.localnews.model.DbHelper;
 import com.proj.andoid.localnews.model.flickr.Photo;
 
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * created by Alex Ivanov on 14.10.15.
@@ -15,16 +18,27 @@ import java.util.List;
 public class AppDatabase {
 
     private DbHelper dbHelper;
+    private EventBus bus;
 
     public AppDatabase(Context c) {
         dbHelper = new DbHelper(c);
+        bus = EventBus.getDefault();
+    }
+
+    public void saveFlickrData(List<Photo> photos) {
+        new SaveFlickrData().execute(photos);
+    }
+
+    public void loadFlickrData() {
+        new LoadFlicrData().execute();
     }
 
     private class LoadFlicrData extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {
-            new FlickrResponceEvent(dbHelper.loadFlickrData(), true);
+            List<Photo> list = dbHelper.loadFlickrData();
+            bus.post(new FlickrResponceEvent(list, true));
             return null;
         }
     }
@@ -35,7 +49,7 @@ public class AppDatabase {
         @Override
         protected final Void doInBackground(List<Photo>... params) {
             dbHelper.insertFlickrData(params[0]);
-            //TODO new event to show new data is ready
+            bus.post(new DataSavedEvent(DataSavedEvent.FLICKR_SAVED));
             return null;
         }
     }

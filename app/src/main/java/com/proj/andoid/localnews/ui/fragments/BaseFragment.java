@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.proj.andoid.localnews.NewsApp;
+import com.proj.andoid.localnews.config.AppDatabase;
 import com.proj.andoid.localnews.config.AppPreferences;
 
 import javax.inject.Inject;
@@ -22,6 +23,8 @@ public abstract class BaseFragment extends Fragment {
 
     @Inject
     protected AppPreferences prefs;
+    @Inject
+    protected AppDatabase database;
     protected EventBus bus;
 
     protected final String tag = getClass().getName();
