@@ -1,8 +1,12 @@
 package com.proj.andoid.localnews.ui.fragments;
 
+import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,11 +18,13 @@ import android.widget.ProgressBar;
 
 import com.proj.andoid.localnews.R;
 import com.proj.andoid.localnews.api.FlickrLoader;
-import com.proj.andoid.localnews.events.DataSavedEvent;
 import com.proj.andoid.localnews.events.FlickrResponceEvent;
+import com.proj.andoid.localnews.events.LocationServiceEvent;
+import com.proj.andoid.localnews.events.NoInternetConnectionEvent;
 import com.proj.andoid.localnews.model.flickr.Photo;
 import com.proj.andoid.localnews.utils.Utils;
 import com.squareup.picasso.Callback;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -27,7 +33,6 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.greenrobot.event.Subscribe;
-import jp.wasabeef.recyclerview.animators.FadeInDownAnimator;
 
 /**
  * created by Alex Ivanov on 10.10.15.
@@ -36,12 +41,13 @@ public class ImagesFragment extends BaseFragment {
 
     @Bind(R.id.tab_recycler_view)
     protected RecyclerView recyclerView;
-    @Bind(R.id.fragments_coordinator_layout)
-    protected CoordinatorLayout coordinatorLayout;
 
     private RecyclerAdapter adapter;
     private LinearLayoutManager layoutManager;
     private FlickrLoader loader;
+    private int searchType = 0;
+    private boolean useDB = false;
+
 
     @Override
     protected int getContentResource() {
@@ -66,7 +72,7 @@ public class ImagesFragment extends BaseFragment {
         } else {
             columnCount = 1;
         }
-        recyclerView.setItemAnimator(new FadeInDownAnimator());
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         layoutManager = new GridLayoutManager(getActivity(), columnCount);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
@@ -82,8 +88,7 @@ public class ImagesFragment extends BaseFragment {
             }
         });
         loader = new FlickrLoader();
-        loader.loadByTag("Kiev");
-        database.loadFlickrData();
+//        loader.loadByTag("Kiev");
     }
 
     @Override
@@ -101,37 +106,35 @@ public class ImagesFragment extends BaseFragment {
     @SuppressWarnings("unused")
     @Subscribe
     public void onEvent(FlickrResponceEvent event) {
-        if (event.hasSearchTypeChanged()) {
+        if (event.getSearchType() != searchType) {
             adapter.deleteAllPhotos();
         }
         adapter.addPhotos(event.getModel());
+        searchType = event.getSearchType();
     }
 
     @SuppressWarnings("unused")
     @Subscribe
-    public void onEvent(DataSavedEvent event) {
-        switch (event.getType()) {
-            case DataSavedEvent.FLICKR_SAVED : {
-                if (adapter.getItemCount() == 0) {
-                    database.loadFlickrData();
-                } else {
-                    Snackbar.make(coordinatorLayout, R.string.new_data_loaded,
-                            Snackbar.LENGTH_INDEFINITE).setAction(R.string.refresh,
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    database.loadFlickrData();
-                                }
-                            }).show();
-                }
-                break;
-            }
+    public void onEvent(NoInternetConnectionEvent event) {
+        if (adapter.getItemCount() == 0) {
+            useDB = true;
+            database.loadFlickrData();
         }
+        CoordinatorLayout cL =
+                (CoordinatorLayout) getActivity().findViewById(R.id.main_coordinator_layout);
+        Snackbar.make(cL, R.string.no_internet_connection, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onEvent(LocationServiceEvent event) {
+        loader.loadByLocation(event.getLocation());
     }
 
     private class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
 
         private List<Photo> photos;
+        private int firstCount;
 
         public RecyclerAdapter() {
             photos = new ArrayList<>();
@@ -139,12 +142,17 @@ public class ImagesFragment extends BaseFragment {
 
         public void addPhotos(List<Photo> photoList) {
             int count = photos.size();
+            int photoListSize = photoList.size();
+            if (firstCount == 0) {
+                firstCount = photoListSize;
+            }
             photos.addAll(photoList);
-            notifyItemRangeInserted(count, photoList.size());
+            notifyItemRangeInserted(count, photoListSize);
         }
 
         public void deleteAllPhotos() {
             int count = photos.size();
+            firstCount = 0;
             photos.clear();
             notifyItemRangeRemoved(0, count);
         }
@@ -160,8 +168,11 @@ public class ImagesFragment extends BaseFragment {
         public void onBindViewHolder(RecyclerViewHolder holder, int position) {
             holder.imageProgressBar.setVisibility(View.VISIBLE);
             Photo imageInfo = photos.get(position);
-
-            loadPhoto(holder, imageInfo);
+            if (useDB) {
+                new LoadImageIntoHolder(holder).execute(imageInfo.getId());
+            } else {
+                loadPhoto(holder, imageInfo);
+            }
         }
 
         private void loadPhoto(final RecyclerViewHolder holder, final Photo imageInfo) {
@@ -171,6 +182,7 @@ public class ImagesFragment extends BaseFragment {
                             imageInfo.getServer(),
                             imageInfo.getId(),
                             imageInfo.getSecret()))
+                    .memoryPolicy(MemoryPolicy.NO_STORE)
                     .into(holder.holderImageView, new Callback() {
                         @Override
                         public void onSuccess() {
@@ -199,9 +211,33 @@ public class ImagesFragment extends BaseFragment {
         @Bind(R.id.image_progress_bar)
         protected ProgressBar imageProgressBar;
 
+        @SuppressWarnings("deprecation")
         public RecyclerViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            imageProgressBar.getIndeterminateDrawable().setColorFilter(
+                    getResources().getColor(R.color.cyan_700), PorterDuff.Mode.SRC_IN);
+        }
+    }
+
+    private class LoadImageIntoHolder extends AsyncTask<String, Void, Bitmap> {
+
+        private RecyclerViewHolder holder;
+
+        public LoadImageIntoHolder(RecyclerViewHolder holder) {
+            this.holder = holder;
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            return Utils.loadPhoto(getActivity(), params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            super.onPostExecute(bitmap);
+            holder.holderImageView.setImageBitmap(bitmap);
+            holder.imageProgressBar.setVisibility(View.GONE);
         }
     }
 }

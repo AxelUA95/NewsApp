@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="primaryColor">#00BCD4</color>
-    <color name="primaryColorDark">#00ACC1</color>
-    <color name="tabsScrollColor">#EEFF41</color>
+    <color name="cyan_100">#B2EBF2</color>
+    <color name="cyan_500">#00BCD4</color>
+    <color name="cyan_700">#0097A7</color>
+    <color name="lime_a200">#EEFF41</color>
 
 </resources>

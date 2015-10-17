@@ -6,8 +6,12 @@ import android.util.Log;
 import com.proj.andoid.localnews.NewsApp;
 import com.proj.andoid.localnews.config.AppDatabase;
 import com.proj.andoid.localnews.events.FlickrResponceEvent;
+import com.proj.andoid.localnews.events.NoInternetConnectionEvent;
 import com.proj.andoid.localnews.model.flickr.FlickrResponseModel;
-import com.proj.andoid.localnews.utils.Utils;
+import com.proj.andoid.localnews.model.flickr.Photo;
+import com.proj.andoid.localnews.utils.Constants;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -27,17 +31,17 @@ public class FlickrLoader implements Callback<FlickrResponseModel> {
 
     private String tag = getClass().getName();
     private FlickrAPIService apiService;
+    private EventBus bus = EventBus.getDefault();
 
     private int page;
-    private boolean loadByLocation;
-    private boolean hasSearchTypeChanged = false;
+    private int searchType = 1;
 
     private Location lastLocation;
     private String lastTag = "Kiev";
 
     public FlickrLoader() {
         apiService = new RestAdapter.Builder()
-                .setEndpoint(Utils.FlickrURL)
+                .setEndpoint(Constants.FlickrURL)
                 .build()
                 .create(FlickrAPIService.class);
         page = 0;
@@ -46,13 +50,11 @@ public class FlickrLoader implements Callback<FlickrResponseModel> {
 
     public void loadByLocation(Location position) {
         lastLocation = position;
-        if (loadByLocation) {
+        if (searchType == Constants.LOCATION_LOAD) {
             page++;
-            hasSearchTypeChanged = false;
         } else {
-            loadByLocation = true;
             page = 1;
-            hasSearchTypeChanged = true;
+            searchType = Constants.LOCATION_LOAD;
         }
         apiService.getByLocation(
                 String.valueOf(position.getLatitude()),
@@ -66,14 +68,11 @@ public class FlickrLoader implements Callback<FlickrResponseModel> {
 
     public void loadByTag(String tag) {
         lastTag = tag;
-
-        if (!loadByLocation) {
+        if (searchType == Constants.TAG_LOAD) {
             page++;
-            hasSearchTypeChanged = false;
         } else {
-            loadByLocation = false;
             page = 1;
-            hasSearchTypeChanged = true;
+            searchType = Constants.TAG_LOAD;
         }
         apiService.getByTag(
                 tag,
@@ -83,23 +82,26 @@ public class FlickrLoader implements Callback<FlickrResponseModel> {
     }
 
     public void getNextPage() {
-        if (loadByLocation) {
+        if (searchType == Constants.LOCATION_LOAD) {
             loadByLocation(lastLocation);
         } else {
             loadByTag(lastTag);
         }
     }
 
+    private void postLoadedPhotos(List<Photo> imagesInfo) {
+        bus.post(new FlickrResponceEvent(imagesInfo, searchType));
+    }
+
     @Override
     public void success(FlickrResponseModel flickrResponseModel, Response response) {
         if (flickrResponseModel.getStat().equals("ok")) {
-            if (flickrResponseModel.getPhotos().getPage() == 1 && !loadByLocation) {
-                database.saveFlickrData(flickrResponseModel.getPhotos().getPhoto());
-            } else {
-                EventBus.getDefault().post(
-                        new FlickrResponceEvent(flickrResponseModel.getPhotos().getPhoto(),
-                                hasSearchTypeChanged));
+            List<Photo> images = flickrResponseModel.getPhotos().getPhoto();
+            if (flickrResponseModel.getPhotos().getPage() == 1 &&
+                    searchType == Constants.LOCATION_LOAD) {
+                database.saveFlickrData(images);
             }
+            postLoadedPhotos(images);
         } else {
             Log.e(tag, "error loading Flickr data, check url");
         }
@@ -108,5 +110,7 @@ public class FlickrLoader implements Callback<FlickrResponseModel> {
     @Override
     public void failure(RetrofitError error) {
         Log.e(tag, "Error loading flickr data ", error);
+        bus.post(new NoInternetConnectionEvent());
+
     }
 }

@@ -1,7 +1,7 @@
 package com.proj.andoid.localnews.api;
 
 import com.proj.andoid.localnews.model.flickr.FlickrResponseModel;
-import com.proj.andoid.localnews.utils.Utils;
+import com.proj.andoid.localnews.utils.Constants;
 
 import retrofit.Callback;
 import retrofit.http.GET;
@@ -13,7 +13,7 @@ import retrofit.http.Query;
 public interface FlickrAPIService {
 
     String url = "/rest/?method=flickr.photos.search&" +
-            "api_key=" + Utils.FlickrAPIKEY + "&" +
+            "api_key=" + Constants.FlickrAPIKEY + "&" +
             "format=json&" +
             "nojsoncallback=1&" +
             "privacy_filter=1&" +

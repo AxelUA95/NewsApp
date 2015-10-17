@@ -3,10 +3,11 @@ package com.proj.andoid.localnews.config;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.proj.andoid.localnews.events.DataSavedEvent;
 import com.proj.andoid.localnews.events.FlickrResponceEvent;
 import com.proj.andoid.localnews.model.DbHelper;
 import com.proj.andoid.localnews.model.flickr.Photo;
+import com.proj.andoid.localnews.utils.Constants;
+import com.proj.andoid.localnews.utils.Utils;
 
 import java.util.List;
 
@@ -19,10 +20,12 @@ public class AppDatabase {
 
     private DbHelper dbHelper;
     private EventBus bus;
+    private Context context;
 
     public AppDatabase(Context c) {
         dbHelper = new DbHelper(c);
         bus = EventBus.getDefault();
+        this.context = c;
     }
 
     public void saveFlickrData(List<Photo> photos) {
@@ -38,7 +41,7 @@ public class AppDatabase {
         @Override
         protected Void doInBackground(Void... params) {
             List<Photo> list = dbHelper.loadFlickrData();
-            bus.post(new FlickrResponceEvent(list, true));
+            bus.post(new FlickrResponceEvent(list, Constants.LOCATION_LOAD));
             return null;
         }
     }
@@ -49,7 +52,10 @@ public class AppDatabase {
         @Override
         protected final Void doInBackground(List<Photo>... params) {
             dbHelper.insertFlickrData(params[0]);
-            bus.post(new DataSavedEvent(DataSavedEvent.FLICKR_SAVED));
+            Utils.cleanImageDirectory(context);
+            for (Photo imageInfo : params[0]) {
+                Utils.savePhoto(context, imageInfo);
+            }
             return null;
         }
     }

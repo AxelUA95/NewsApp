@@ -10,18 +10,18 @@ import java.util.List;
 public class FlickrResponceEvent {
 
     private final List<Photo> model;
-    private final boolean hasSearchTypeChanged;
+    private final int searchType;
 
-    public FlickrResponceEvent(List<Photo> responseModel, boolean searchTypeChange) {
+    public FlickrResponceEvent(List<Photo> responseModel, int searchType) {
         model = responseModel;
-        hasSearchTypeChanged = searchTypeChange;
+        this.searchType = searchType;
     }
 
     public List<Photo> getModel() {
         return model;
     }
 
-    public boolean hasSearchTypeChanged() {
-        return hasSearchTypeChanged;
+    public int getSearchType() {
+        return searchType;
     }
 }

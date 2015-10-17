@@ -60,6 +60,4 @@ dependencies {
     compile 'de.greenrobot:eventbus:3.0.0-beta1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.google.android.gms:play-services:8.1.0'
-    //recycler animation
-    compile 'jp.wasabeef:recyclerview-animators:1.3.0'
 }

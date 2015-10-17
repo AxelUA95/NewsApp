@@ -25,7 +25,7 @@ allprojects {
         targetSDKVersion = 23
         minSDKVersion = 15
         buildToolVersion = '23.0.1'
-        supportLibraryVersion = '23.0.1'
+        supportLibraryVersion = '23.1.0'
     }
 }
 
