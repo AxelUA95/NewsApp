@@ -60,4 +60,6 @@ dependencies {
     compile 'de.greenrobot:eventbus:3.0.0-beta1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.google.android.gms:play-services:8.1.0'
+    //Twitter
+    compile 'org.twitter4j:twitter4j-core:4.0.4'
 }
