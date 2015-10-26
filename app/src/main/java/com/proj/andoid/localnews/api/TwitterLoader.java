@@ -3,10 +3,12 @@ package com.proj.andoid.localnews.api;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.proj.andoid.localnews.events.TwitterResponseEvent;
 import com.proj.andoid.localnews.utils.Constants;
 
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import twitter4j.Query;
 import twitter4j.Status;
 import twitter4j.Twitter;
@@ -21,10 +23,11 @@ public class TwitterLoader {
 
     private final String tag = getClass().getName();
     private Twitter twitter;
+    private EventBus bus;
 
     public TwitterLoader() {
         buildTwitterConfig();
-
+        bus = EventBus.getDefault();
         new getTweetsAsync().execute("Kyiv");
     }
 
@@ -55,7 +58,7 @@ public class TwitterLoader {
         @Override
         protected void onPostExecute(List<twitter4j.Status> statuses) {
             super.onPostExecute(statuses);
-            twitter4j.Status tweet = statuses.get(0);
+            bus.post(new TwitterResponseEvent(statuses, Constants.TAG_LOAD));
         }
     }
 

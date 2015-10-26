@@ -62,4 +62,6 @@ dependencies {
     compile 'com.google.android.gms:play-services:8.1.0'
     //Twitter
     compile 'org.twitter4j:twitter4j-core:4.0.4'
+    //Recycler Animations
+    compile 'jp.wasabeef:recyclerview-animators:2.0.0'
 }

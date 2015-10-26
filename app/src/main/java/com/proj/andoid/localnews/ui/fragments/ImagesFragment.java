@@ -2,11 +2,11 @@ package com.proj.andoid.localnews.ui.fragments;
 
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,6 +33,8 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.greenrobot.event.Subscribe;
+import jp.wasabeef.recyclerview.animators.BaseItemAnimator;
+import jp.wasabeef.recyclerview.animators.LandingAnimator;
 
 /**
  * created by Alex Ivanov on 10.10.15.
@@ -72,7 +74,9 @@ public class ImagesFragment extends BaseFragment {
         } else {
             columnCount = 1;
         }
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        BaseItemAnimator animator = new LandingAnimator();
+        animator.setAddDuration(500);
+        recyclerView.setItemAnimator(animator);
         layoutManager = new GridLayoutManager(getActivity(), columnCount);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
@@ -88,7 +92,10 @@ public class ImagesFragment extends BaseFragment {
             }
         });
         loader = new FlickrLoader();
-//        loader.loadByTag("Kiev");
+        Location location = loader.getLastLocation();
+        if (location != null) {
+            loader.loadByLocation(location);
+        }
     }
 
     @Override
@@ -134,7 +141,6 @@ public class ImagesFragment extends BaseFragment {
     private class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
 
         private List<Photo> photos;
-        private int firstCount;
 
         public RecyclerAdapter() {
             photos = new ArrayList<>();
@@ -142,17 +148,12 @@ public class ImagesFragment extends BaseFragment {
 
         public void addPhotos(List<Photo> photoList) {
             int count = photos.size();
-            int photoListSize = photoList.size();
-            if (firstCount == 0) {
-                firstCount = photoListSize;
-            }
             photos.addAll(photoList);
-            notifyItemRangeInserted(count, photoListSize);
+            notifyItemRangeInserted(count, photoList.size());
         }
 
         public void deleteAllPhotos() {
             int count = photos.size();
-            firstCount = 0;
             photos.clear();
             notifyItemRangeRemoved(0, count);
         }

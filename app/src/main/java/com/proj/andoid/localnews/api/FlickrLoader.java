@@ -113,4 +113,8 @@ public class FlickrLoader implements Callback<FlickrResponseModel> {
         bus.post(new NoInternetConnectionEvent());
 
     }
+
+    public Location getLastLocation() {
+        return lastLocation;
+    }
 }

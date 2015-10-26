@@ -27,6 +27,7 @@ import com.proj.andoid.localnews.R;
 import com.proj.andoid.localnews.events.LoadByTagEvent;
 import com.proj.andoid.localnews.events.LocationServiceEvent;
 import com.proj.andoid.localnews.ui.fragments.ImagesFragment;
+import com.proj.andoid.localnews.ui.fragments.PostsFragment;
 
 import butterknife.Bind;
 
@@ -165,13 +166,13 @@ public class MainActivity extends BaseActivity implements
         public Fragment getItem(int position) {
             switch (position) {
                 case 0: {
-                    return new Fragment();
-                }
-                case 1: {
                     return new ImagesFragment();
                 }
-                case 2: {
+                case 1: {
                     return new Fragment();
+                }
+                case 2: {
+                    return new PostsFragment();
                 }
             }
             return null;

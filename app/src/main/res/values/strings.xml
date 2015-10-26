@@ -3,8 +3,8 @@
     <string name="action_settings">Settings</string>
 
     <string-array name="titles">
-        <item name="news_tab">News</item>
         <item name="images_tab">Images</item>
+        <item name="news_tab">News</item>
         <item name="post_tab">Posts</item>
     </string-array>
 

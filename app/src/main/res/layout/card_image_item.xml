@@ -20,8 +20,8 @@
 
     <ImageView
         android:id="@+id/provider_image_view"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_gravity="bottom|end"
         android:contentDescription="@string/provider_content_description"
         android:src="@drawable/flickr_icon"
