@@ -1,3 +1,4 @@
+
 package com.proj.andoid.localnews.model.flickr_response.flickrgetinfo;
 
 import java.util.HashMap;
@@ -5,46 +6,46 @@ import java.util.Map;
 import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
-public class FlickrGetInfo {
+public class Publiceditability {
 
-    private Photo photo;
-    private String stat;
+    private Integer cancomment;
+    private Integer canaddmeta;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * 
      * @return
-     *     The photo
+     *     The cancomment
      */
-    public Photo getPhoto() {
-        return photo;
+    public Integer getCancomment() {
+        return cancomment;
     }
 
     /**
      * 
-     * @param photo
-     *     The photo
+     * @param cancomment
+     *     The cancomment
      */
-    public void setPhoto(Photo photo) {
-        this.photo = photo;
+    public void setCancomment(Integer cancomment) {
+        this.cancomment = cancomment;
     }
 
     /**
      * 
      * @return
-     *     The stat
+     *     The canaddmeta
      */
-    public String getStat() {
-        return stat;
+    public Integer getCanaddmeta() {
+        return canaddmeta;
     }
 
     /**
      * 
-     * @param stat
-     *     The stat
+     * @param canaddmeta
+     *     The canaddmeta
      */
-    public void setStat(String stat) {
-        this.stat = stat;
+    public void setCanaddmeta(Integer canaddmeta) {
+        this.canaddmeta = canaddmeta;
     }
 
     public Map<String, Object> getAdditionalProperties() {

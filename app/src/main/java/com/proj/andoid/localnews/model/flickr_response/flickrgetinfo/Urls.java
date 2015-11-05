@@ -1,50 +1,34 @@
+
 package com.proj.andoid.localnews.model.flickr_response.flickrgetinfo;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
-public class FlickrGetInfo {
+public class Urls {
 
-    private Photo photo;
-    private String stat;
+    private List<Url> url = new ArrayList<Url>();
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * 
      * @return
-     *     The photo
+     *     The url
      */
-    public Photo getPhoto() {
-        return photo;
+    public List<Url> getUrl() {
+        return url;
     }
 
     /**
      * 
-     * @param photo
-     *     The photo
+     * @param url
+     *     The url
      */
-    public void setPhoto(Photo photo) {
-        this.photo = photo;
-    }
-
-    /**
-     * 
-     * @return
-     *     The stat
-     */
-    public String getStat() {
-        return stat;
-    }
-
-    /**
-     * 
-     * @param stat
-     *     The stat
-     */
-    public void setStat(String stat) {
-        this.stat = stat;
+    public void setUrl(List<Url> url) {
+        this.url = url;
     }
 
     public Map<String, Object> getAdditionalProperties() {

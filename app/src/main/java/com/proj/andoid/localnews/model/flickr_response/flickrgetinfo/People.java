@@ -1,3 +1,4 @@
+
 package com.proj.andoid.localnews.model.flickr_response.flickrgetinfo;
 
 import java.util.HashMap;
@@ -5,46 +6,27 @@ import java.util.Map;
 import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
-public class FlickrGetInfo {
+public class People {
 
-    private Photo photo;
-    private String stat;
+    private Integer haspeople;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * 
      * @return
-     *     The photo
+     *     The haspeople
      */
-    public Photo getPhoto() {
-        return photo;
+    public Integer getHaspeople() {
+        return haspeople;
     }
 
     /**
      * 
-     * @param photo
-     *     The photo
+     * @param haspeople
+     *     The haspeople
      */
-    public void setPhoto(Photo photo) {
-        this.photo = photo;
-    }
-
-    /**
-     * 
-     * @return
-     *     The stat
-     */
-    public String getStat() {
-        return stat;
-    }
-
-    /**
-     * 
-     * @param stat
-     *     The stat
-     */
-    public void setStat(String stat) {
-        this.stat = stat;
+    public void setHaspeople(Integer haspeople) {
+        this.haspeople = haspeople;
     }
 
     public Map<String, Object> getAdditionalProperties() {
