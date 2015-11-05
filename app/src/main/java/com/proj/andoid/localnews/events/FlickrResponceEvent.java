@@ -1,6 +1,6 @@
 package com.proj.andoid.localnews.events;
 
-import com.proj.andoid.localnews.model.flickr.Photo;
+import com.proj.andoid.localnews.model.flickr_response.flickrgetphotos.Photo;
 
 import java.util.List;
 

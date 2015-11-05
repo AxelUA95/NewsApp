@@ -21,7 +21,7 @@ import com.proj.andoid.localnews.api.FlickrLoader;
 import com.proj.andoid.localnews.events.FlickrResponceEvent;
 import com.proj.andoid.localnews.events.LocationServiceEvent;
 import com.proj.andoid.localnews.events.NoInternetConnectionEvent;
-import com.proj.andoid.localnews.model.flickr.Photo;
+import com.proj.andoid.localnews.model.flickr_response.flickrgetphotos.Photo;
 import com.proj.andoid.localnews.utils.Utils;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.MemoryPolicy;

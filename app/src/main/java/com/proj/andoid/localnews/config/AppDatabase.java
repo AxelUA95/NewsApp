@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 
 import com.proj.andoid.localnews.events.FlickrResponceEvent;
 import com.proj.andoid.localnews.model.DbHelper;
-import com.proj.andoid.localnews.model.flickr.Photo;
+import com.proj.andoid.localnews.model.flickr_response.flickrgetphotos.Photo;
 import com.proj.andoid.localnews.utils.Constants;
 import com.proj.andoid.localnews.utils.Utils;
 

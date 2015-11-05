@@ -7,7 +7,7 @@ import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
-import com.proj.andoid.localnews.model.flickr.Photo;
+import com.proj.andoid.localnews.model.flickr_response.flickrgetphotos.Photo;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
