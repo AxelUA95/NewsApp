@@ -1,4 +1,4 @@
-package com.proj.andoid.localnews.model.flickr;
+package com.proj.andoid.localnews.model.flickr_response.flickrgetphotos;
 
 import com.google.gson.annotations.Expose;
 

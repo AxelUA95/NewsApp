@@ -2,6 +2,7 @@ package com.proj.andoid.localnews.ui.fragments;
 
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,13 +22,14 @@ import com.proj.andoid.localnews.api.FlickrLoader;
 import com.proj.andoid.localnews.events.FlickrResponceEvent;
 import com.proj.andoid.localnews.events.LocationServiceEvent;
 import com.proj.andoid.localnews.events.NoInternetConnectionEvent;
-import com.proj.andoid.localnews.model.flickr.Photo;
+import com.proj.andoid.localnews.model.flickr_response.flickrgetphotos.Photo;
 import com.proj.andoid.localnews.utils.Utils;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
@@ -50,7 +52,6 @@ public class ImagesFragment extends BaseFragment {
     private int searchType = 0;
     private boolean useDB = false;
 
-
     @Override
     protected int getContentResource() {
         return R.layout.tab_fragment;
@@ -63,9 +64,7 @@ public class ImagesFragment extends BaseFragment {
         adapter = new RecyclerAdapter();
         double screenSize = Utils.getScreenSize(getActivity());
         int columnCount;
-        if (screenSize > 8) {
-            columnCount = 5;
-        } else if (screenSize > 6) {
+        if (screenSize > 7) {
             columnCount = 4;
         } else if (screenSize > 5) {
             columnCount = 3;
@@ -141,9 +140,11 @@ public class ImagesFragment extends BaseFragment {
     private class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
 
         private List<Photo> photos;
+        private HashMap<Integer, Bitmap> images;
 
         public RecyclerAdapter() {
             photos = new ArrayList<>();
+            images = new HashMap<>();
         }
 
         public void addPhotos(List<Photo> photoList) {
@@ -155,6 +156,7 @@ public class ImagesFragment extends BaseFragment {
         public void deleteAllPhotos() {
             int count = photos.size();
             photos.clear();
+            images.clear();
             notifyItemRangeRemoved(0, count);
         }
 
@@ -169,32 +171,40 @@ public class ImagesFragment extends BaseFragment {
         public void onBindViewHolder(RecyclerViewHolder holder, int position) {
             holder.imageProgressBar.setVisibility(View.VISIBLE);
             Photo imageInfo = photos.get(position);
-            if (useDB) {
-                new LoadImageIntoHolder(holder).execute(imageInfo.getId());
+            if (images.containsKey(position)) {
+                holder.holderImageView.setImageBitmap(images.get(position));
+                holder.imageProgressBar.setVisibility(View.GONE);
             } else {
-                loadPhoto(holder, imageInfo);
+                if (useDB) {
+                    new LoadImageIntoHolder(images, holder, position).execute(imageInfo.getId());
+                } else {
+                    loadPhoto(holder, imageInfo, position);
+                }
             }
         }
 
-        private void loadPhoto(final RecyclerViewHolder holder, final Photo imageInfo) {
+        private void loadPhoto(final RecyclerViewHolder holder, final Photo imageInfo, final int position) {
             Picasso.with(getActivity())
                     .load(Utils.getFlickrPhotoURL(
                             imageInfo.getFarm(),
                             imageInfo.getServer(),
                             imageInfo.getId(),
                             imageInfo.getSecret()))
-                    .memoryPolicy(MemoryPolicy.NO_STORE)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .into(holder.holderImageView, new Callback() {
                         @Override
                         public void onSuccess() {
-                            Log.i(tag, "successfully loaded image " + imageInfo.getId());
+                            Log.i(tag, "Successfully loaded image into holder");
                             holder.imageProgressBar.setVisibility(View.GONE);
+                            BitmapDrawable bitmapDrawable = (BitmapDrawable) holder
+                                    .holderImageView.getDrawable();
+                            images.put(position, bitmapDrawable.getBitmap());
                         }
 
                         @Override
                         public void onError() {
                             Log.e(tag, "Cannot load image, new try");
-                            loadPhoto(holder, imageInfo);
+                            loadPhoto(holder, imageInfo, position);
                         }
                     });
         }
@@ -223,10 +233,14 @@ public class ImagesFragment extends BaseFragment {
 
     private class LoadImageIntoHolder extends AsyncTask<String, Void, Bitmap> {
 
+        private HashMap<Integer, Bitmap> images;
         private RecyclerViewHolder holder;
+        private int position;
 
-        public LoadImageIntoHolder(RecyclerViewHolder holder) {
+        public LoadImageIntoHolder(HashMap<Integer, Bitmap> images, RecyclerViewHolder holder, int pos) {
+            this.images = images;
             this.holder = holder;
+            this.position = pos;
         }
 
         @Override
@@ -237,6 +251,7 @@ public class ImagesFragment extends BaseFragment {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
+            images.put(position, bitmap);
             holder.holderImageView.setImageBitmap(bitmap);
             holder.imageProgressBar.setVisibility(View.GONE);
         }

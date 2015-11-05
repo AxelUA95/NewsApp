@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.proj.andoid.localnews.model.flickr.Photo;
+import com.proj.andoid.localnews.model.flickr_response.flickrgetphotos.Photo;
 
 import java.util.ArrayList;
 import java.util.List;

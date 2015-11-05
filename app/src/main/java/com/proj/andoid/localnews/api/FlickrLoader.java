@@ -7,8 +7,8 @@ import com.proj.andoid.localnews.NewsApp;
 import com.proj.andoid.localnews.config.AppDatabase;
 import com.proj.andoid.localnews.events.FlickrResponceEvent;
 import com.proj.andoid.localnews.events.NoInternetConnectionEvent;
-import com.proj.andoid.localnews.model.flickr.FlickrResponseModel;
-import com.proj.andoid.localnews.model.flickr.Photo;
+import com.proj.andoid.localnews.model.flickr_response.flickrgetphotos.FlickrResponseModel;
+import com.proj.andoid.localnews.model.flickr_response.flickrgetphotos.Photo;
 import com.proj.andoid.localnews.utils.Constants;
 
 import java.util.List;

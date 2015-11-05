@@ -4,7 +4,7 @@ import android.database.Cursor;
 import android.database.CursorWrapper;
 
 import com.proj.andoid.localnews.model.DataContract.*;
-import com.proj.andoid.localnews.model.flickr.Photo;
+import com.proj.andoid.localnews.model.flickr_response.flickrgetphotos.Photo;
 
 /**
  * created by Alex Ivanov on 14.10.15.

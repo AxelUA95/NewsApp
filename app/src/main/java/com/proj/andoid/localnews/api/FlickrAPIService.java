@@ -1,6 +1,6 @@
 package com.proj.andoid.localnews.api;
 
-import com.proj.andoid.localnews.model.flickr.FlickrResponseModel;
+import com.proj.andoid.localnews.model.flickr_response.flickrgetphotos.FlickrResponseModel;
 import com.proj.andoid.localnews.utils.Constants;
 
 import retrofit.Callback;
