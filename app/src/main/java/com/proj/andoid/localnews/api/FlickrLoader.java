@@ -7,6 +7,8 @@ import com.proj.andoid.localnews.NewsApp;
 import com.proj.andoid.localnews.config.AppDatabase;
 import com.proj.andoid.localnews.events.FlickrResponceEvent;
 import com.proj.andoid.localnews.events.NoInternetConnectionEvent;
+import com.proj.andoid.localnews.model.flickr_response.flickrgetcomments.FlickrGetComments;
+import com.proj.andoid.localnews.model.flickr_response.flickrgetinfo.FlickrGetInfo;
 import com.proj.andoid.localnews.model.flickr_response.flickrgetphotos.FlickrResponseModel;
 import com.proj.andoid.localnews.model.flickr_response.flickrgetphotos.Photo;
 import com.proj.andoid.localnews.utils.Constants;
@@ -89,6 +91,36 @@ public class FlickrLoader implements Callback<FlickrResponseModel> {
         }
     }
 
+    public void getPhotoInfo(String id, String secret) {
+        apiService.getPhotoInfo(id, secret,
+                new Callback<FlickrGetInfo>() {
+                    @Override
+                    public void success(FlickrGetInfo flickrGetInfo, Response response) {
+                        //TODO fill it.
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+
+                    }
+                });
+    }
+
+    public void getPhotoComments(String id) {
+        apiService.getComments(id,
+                new Callback<FlickrGetComments>() {
+                    @Override
+                    public void success(FlickrGetComments flickrGetComments, Response response) {
+                        //TODO fill.
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+
+                    }
+                });
+    }
+
     private void postLoadedPhotos(List<Photo> imagesInfo) {
         bus.post(new FlickrResponceEvent(imagesInfo, searchType));
     }
@@ -103,7 +135,7 @@ public class FlickrLoader implements Callback<FlickrResponseModel> {
             }
             postLoadedPhotos(images);
         } else {
-            Log.e(tag, "error loading Flickr data, check url");
+            Log.e(tag, "error loading Flickr data, check urlSearch");
         }
     }
 
