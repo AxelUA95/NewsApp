@@ -43,6 +43,5 @@ task setVersion(type: Exec) {
         standardOutput = stdout
     }
     def hash = stdout.toString().trim().substring(0, 8)
-    println(hash)
     commandLine 'git', 'tag', '-a', "${versionFull}-${hash}", '-m', versionFull
 }
