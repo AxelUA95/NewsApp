@@ -16,7 +16,7 @@ public class Urls {
     /**
      * 
      * @return
-     *     The url
+     *     The urlSearch
      */
     public List<Url> getUrl() {
         return url;
@@ -25,7 +25,7 @@ public class Urls {
     /**
      * 
      * @param url
-     *     The url
+     *     The urlSearch
      */
     public void setUrl(List<Url> url) {
         this.url = url;
