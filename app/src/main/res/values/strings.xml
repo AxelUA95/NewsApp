@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <resources>
     <string name="app_name">NewsApp</string>
     <string name="action_settings">Settings</string>
@@ -19,3 +20,25 @@
     <string name="refresh">Refresh</string>
     <string name="no_internet_connection">Check your internet connection</string>
 </resources>
+||||||| merged common ancestors
+=======
+<resources>
+    <string name="app_name" translatable="false">NowNews</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string-array name="titles">
+        <item name="news_tab">News</item>
+        <item name="images_tab">Images</item>
+        <item name="post_tab">Posts</item>
+    </string-array>
+
+    <string name="image_content_description">web image</string>
+    <string name="provider_content_description">service image </string>
+    <string name="drawer_image">Icon for drawer item</string>
+    <string name="search_hint">Type tag</string>
+    <string name="remove">Remove</string>
+    <string name="search_location">Search using location</string>
+
+</resources>
+>>>>>>> 7da4851fdeb8cb42fa05e2ce4f836547e84093c0

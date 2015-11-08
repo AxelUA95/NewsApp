@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
@@ -5,3 +6,11 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="search_sides_padding">10dp</dimen>
 </resources>
+||||||| merged common ancestors
+=======
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+</resources>
+>>>>>>> 7da4851fdeb8cb42fa05e2ce4f836547e84093c0

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <resources>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -7,3 +8,15 @@
     </style>
 
 </resources>
+||||||| merged common ancestors
+=======
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryColorDark</item>
+    </style>
+
+</resources>
+>>>>>>> 7da4851fdeb8cb42fa05e2ce4f836547e84093c0
