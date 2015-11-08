@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme.Home">
+        <item name="android:windowExitTransition">
+            @transition/image_grid_exit
+        </item>
+    </style>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/cyan_500</item>
+        <item name="colorPrimaryDark">@color/cyan_700</item>
+        <item name="colorAccent">@color/lime_a200</item>
+        <item name="android:windowContentTransitions">true</item>
+    </style>
+</resources>

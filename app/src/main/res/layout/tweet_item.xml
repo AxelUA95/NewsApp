@@ -21,7 +21,9 @@
             android:textSize="22sp"
             android:layout_toLeftOf="@+id/twitter_image_view"
             android:layout_toStartOf="@+id/twitter_image_view"
-            android:fontFamily="sans-serif-medium"/>
+            android:fontFamily="sans-serif-medium"
+            android:autoLink="all"
+            android:autoText="true"/>
 
         <ImageView
             android:id="@+id/twitter_image_view"
