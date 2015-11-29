@@ -36,8 +36,8 @@ public class DataContract {
         public static final String COLUMN_IS_FRIEND = "is_friend";
         public static final String COLUMN_IS_FAMILY = "is_family";
 
-        public static Uri buildFLickrUri(String id) {
-            return CONTENT_URI.buildUpon().appendEncodedPath(id).build();
+        public static Uri buildFlickrUri(String id) {
+            return CONTENT_URI.buildUpon().appendEncodedPath(id).build();//if id = 1 then "content://com.proj.android.localnews/flickr/1
         }
     }
 }

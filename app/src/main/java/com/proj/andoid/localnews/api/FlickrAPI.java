@@ -12,7 +12,7 @@ import retrofit.http.Query;
 /**
  * created by Alex Ivanov on 08.09.15.
  */
-public interface FlickrAPIService {
+public interface FlickrAPI {
 
     String urlSearch = "/rest/?method=flickr.photos.search&" +
             "api_key=" + Constants.FlickrAPIKEY + "&" +

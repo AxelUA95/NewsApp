@@ -4,6 +4,13 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
@@ -35,9 +42,9 @@ public class Utils {
     public static double getScreenSize(Context c) {
         DisplayMetrics dm = c.getResources().getDisplayMetrics();
         double density = dm.densityDpi;
-        double w = Math.pow(((double)dm.widthPixels / density) , 2);
-        double h = Math.pow(((double)dm.heightPixels / density), 2);
-        return  Math.sqrt(w + h);
+        double w = Math.pow(((double) dm.widthPixels / density), 2);
+        double h = Math.pow(((double) dm.heightPixels / density), 2);
+        return Math.sqrt(w + h);
     }
 
     private static File getFilePath(Context context, String title) {
@@ -59,11 +66,11 @@ public class Utils {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
             fos.close();
         } catch (IOException e) {
-            Log.e(tag,"error saving photo", e);
+            Log.e(tag, "error saving photo", e);
         }
     }
 
-    public static Bitmap loadPhoto(Context context,String id) {
+    public static Bitmap loadPhoto(Context context, String id) {
         File photoFile = getFilePath(context, id);
         Bitmap bitmap = null;
         try {
@@ -89,5 +96,24 @@ public class Utils {
         if (f.delete()) {
             Log.i(tag, "successfully deleted image");
         }
+    }
+
+    public static Bitmap getCircularBitmap(Bitmap bitmap) {
+        Bitmap out = Bitmap.createBitmap(bitmap.getWidth(),
+                bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(out);
+        Paint paint = new Paint();
+        Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(Color.BLACK);
+        canvas.drawOval(new RectF(rect), paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+        bitmap.recycle();
+
+        return out;
     }
 }

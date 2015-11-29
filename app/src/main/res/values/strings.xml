@@ -10,6 +10,7 @@
 
     <string name="image_content_description">web image</string>
     <string name="provider_content_description">service image </string>
+    <string name="author_image_content_description">Photo of author</string>
     <string name="search_image_view">search shows that yo can search here</string>
     <string name="search_hint">Type tag to search</string>
     <string name="remove">Remove</string>

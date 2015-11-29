@@ -32,7 +32,7 @@ public class FlickrLoader implements Callback<FlickrResponseModel> {
     protected AppDatabase database;
 
     private String tag = getClass().getName();
-    private FlickrAPIService apiService;
+    private FlickrAPI apiService;
     private EventBus bus = EventBus.getDefault();
 
     private int page;
@@ -45,7 +45,7 @@ public class FlickrLoader implements Callback<FlickrResponseModel> {
         apiService = new RestAdapter.Builder()
                 .setEndpoint(Constants.FlickrURL)
                 .build()
-                .create(FlickrAPIService.class);
+                .create(FlickrAPI.class);
         page = 0;
         NewsApp.getComponent().inject(this);
     }
