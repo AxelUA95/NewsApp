@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.proj.andoid.localnews.NewsApp;
 import com.proj.andoid.localnews.config.AppDatabase;
-import com.proj.andoid.localnews.events.FlickrResponceEvent;
+import com.proj.andoid.localnews.events.FlickrResponseEvent;
 import com.proj.andoid.localnews.events.NoInternetConnectionEvent;
 import com.proj.andoid.localnews.model.flickr_response.flickrgetcomments.FlickrGetComments;
 import com.proj.andoid.localnews.model.flickr_response.flickrgetinfo.FlickrGetInfo;
@@ -122,7 +122,7 @@ public class FlickrLoader implements Callback<FlickrResponseModel> {
     }
 
     private void postLoadedPhotos(List<Photo> imagesInfo) {
-        bus.post(new FlickrResponceEvent(imagesInfo, searchType));
+        bus.post(new FlickrResponseEvent(imagesInfo, searchType));
     }
 
     @Override
