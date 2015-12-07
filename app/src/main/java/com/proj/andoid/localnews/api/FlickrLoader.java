@@ -56,6 +56,12 @@ public class FlickrLoader implements Callback<FlickrResponseModel> {
 
     public void loadByLocation(Location position) {
         lastLocation = position;
+        String lng = String.valueOf(position.getLongitude());
+        String lat = String.valueOf(position.getLatitude());
+        loadByLocation(lng, lat, this);
+    }
+
+    public Void loadByLocation(String lng, String lat, Callback<FlickrResponseModel> callback) {
         if (searchType == Constants.LOCATION_LOAD) {
             page++;
         } else {
@@ -63,16 +69,17 @@ public class FlickrLoader implements Callback<FlickrResponseModel> {
             searchType = Constants.LOCATION_LOAD;
         }
         apiService.getByLocation(
-                String.valueOf(position.getLatitude()),
-                String.valueOf(position.getLongitude()),
+                String.valueOf(lat),
+                String.valueOf(lng),
                 "10",//TODO get this value from prefs
                 "km",
                 "20",
                 String.valueOf(page),
-                this);
+                callback);
+        return null;
     }
 
-    public void loadByTag(String tag) {
+    public void loadByTag(String tag, Callback<FlickrResponseModel> callback) {
         lastTag = tag;
         if (searchType == Constants.TAG_LOAD) {
             page++;
@@ -85,6 +92,10 @@ public class FlickrLoader implements Callback<FlickrResponseModel> {
                 "20",
                 String.valueOf(page),
                 this);
+    }
+
+    public void loadByTag(String tag) {
+        loadByTag(tag, this);
     }
 
     public void getNextPage() {
@@ -125,7 +136,7 @@ public class FlickrLoader implements Callback<FlickrResponseModel> {
                 });
     }
 
-    private void postLoadedPhotos(List<Photo> imagesInfo) {
+    public void postLoadedPhotos(List<Photo> imagesInfo) {
         bus.post(new FlickrResponseEvent(imagesInfo, searchType));
     }
 
