@@ -18,7 +18,7 @@ public class Photos {
     @Expose
     private String total;
     @Expose
-    private List<Photo> photo = new ArrayList<Photo>();
+    private List<Photo> photo = new ArrayList<>();
 
     public int getPage() {
         return page;
@@ -38,5 +38,25 @@ public class Photos {
 
     public List<Photo> getPhoto() {
         return photo;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public void setPages(String pages) {
+        this.pages = pages;
+    }
+
+    public void setPerpage(int perpage) {
+        this.perpage = perpage;
+    }
+
+    public void setTotal(String total) {
+        this.total = total;
+    }
+
+    public void setPhoto(List<Photo> photo) {
+        this.photo = photo;
     }
 }
