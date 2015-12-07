@@ -5,7 +5,6 @@ import com.proj.andoid.localnews.model.flickr_response.flickrgetphotos.FlickrRes
 import com.proj.andoid.localnews.model.flickr_response.flickrgetphotos.Photo;
 import com.proj.andoid.localnews.model.flickr_response.flickrgetphotos.Photos;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -20,6 +19,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 
@@ -34,6 +34,7 @@ public class FlickrLoaderTests {
     public ArgumentCaptor<Callback<FlickrResponseModel>> response;
 
     private List<Photo> images = new ArrayList<>();
+    private int page = -1;
 
     @Before
     public void setup() {
@@ -54,10 +55,10 @@ public class FlickrLoaderTests {
         });
         verify(flickrLoader).loadByLocation(anyString(), anyString(), response.capture());
 
-       FlickrResponseModel model = createFlickrResponseModel();
+        FlickrResponseModel model = createFlickrResponseModel();
 
         response.getValue().success(model, null);
-        Assert.assertTrue(images.size() == 10);
+        assertTrue(images.size() == 10);
     }
 
     @Test
@@ -74,10 +75,8 @@ public class FlickrLoaderTests {
         });
         verify(flickrLoader).loadByLocation(anyString(), anyString(), response.capture());
 
-        FlickrResponseModel model = createFlickrResponseModel();
-
         response.getValue().failure(null);
-        Assert.assertTrue(images.size() == 0);
+        assertTrue(images.size() == 0);
     }
 
     private FlickrResponseModel createFlickrResponseModel() {
@@ -96,5 +95,48 @@ public class FlickrLoaderTests {
         }
         photo.setPhoto(list);
         return model;
+    }
+
+    @Test
+    public void loadByTag() {
+        flickrLoader.loadByTag("tag", new Callback<FlickrResponseModel>() {
+            @Override
+            public void success(FlickrResponseModel flickrResponseModel, Response response) {
+                images = flickrResponseModel.getPhotos().getPhoto();
+                page = flickrResponseModel.getPhotos().getPage();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                images.clear();
+            }
+        });
+        verify(flickrLoader).loadByTag(anyString(), response.capture());
+        FlickrResponseModel model = createFlickrResponseModel();
+
+        response.getValue().success(model, null);
+        assertTrue(images.size() == 10);
+        assertTrue(page == 1);
+    }
+
+    @Test
+    public void loadByTagWithBadRequest() {
+        flickrLoader.loadByTag("tag", new Callback<FlickrResponseModel>() {
+            @Override
+            public void success(FlickrResponseModel flickrResponseModel, Response response) {
+                images = flickrResponseModel.getPhotos().getPhoto();
+                page = flickrResponseModel.getPhotos().getPage();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                images.clear();
+            }
+        });
+        verify(flickrLoader).loadByTag(anyString(), response.capture());
+
+        response.getValue().failure(null);
+        assertTrue(images.size() == 0);
+        assertTrue(page == -1);
     }
 }
