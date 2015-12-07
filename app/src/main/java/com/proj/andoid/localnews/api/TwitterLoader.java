@@ -9,6 +9,7 @@ import com.proj.andoid.localnews.utils.Constants;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import retrofit.Callback;
 import twitter4j.Query;
 import twitter4j.Status;
 import twitter4j.Twitter;
@@ -24,6 +25,7 @@ public class TwitterLoader {
     private final String tag = getClass().getName();
     private Twitter twitter;
     private EventBus bus;
+    private Callback<List<Status>> callback;
 
     public TwitterLoader() {
         buildTwitterConfig();
@@ -32,6 +34,11 @@ public class TwitterLoader {
 
     public void loadByTag(String tag) {
         new getTweetsAsync().execute("Kyiv");
+    }
+
+    public void loadByTag(String tag, Callback<List<Status>> callback) {
+        loadByTag(tag);
+        this.callback = callback;
     }
 
     private void buildTwitterConfig() {
@@ -61,6 +68,9 @@ public class TwitterLoader {
         @Override
         protected void onPostExecute(List<twitter4j.Status> statuses) {
             super.onPostExecute(statuses);
+            if (callback != null) {
+                callback.success(statuses, null);
+            }
             bus.post(new TwitterResponseEvent(statuses, Constants.TAG_LOAD));
         }
     }
