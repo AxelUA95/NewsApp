@@ -47,14 +47,13 @@ public class Utils {
         return Math.sqrt(w + h);
     }
 
-    private static File getFilePath(Context context, String title) {
-        ContextWrapper cw = new ContextWrapper(context);
+    public static File getFilePath(ContextWrapper cw, String title) {
         File fileDir = cw.getDir(Constants.photoFlikrDir, Context.MODE_PRIVATE);
         return new File(fileDir, title + ".jpg");
     }
 
     public static void savePhoto(Context context, Photo image) {
-        File path = getFilePath(context, image.getId());
+        File path = getFilePath(new ContextWrapper(context), image.getId());
 
         String url = Utils.getFlickrPhotoURL(image.getFarm(),
                 image.getServer(), image.getId(), image.getSecret());
@@ -71,7 +70,7 @@ public class Utils {
     }
 
     public static Bitmap loadPhoto(Context context, String id) {
-        File photoFile = getFilePath(context, id);
+        File photoFile = getFilePath(new ContextWrapper(context), id);
         Bitmap bitmap = null;
         try {
             bitmap = BitmapFactory.decodeStream(new FileInputStream(photoFile));

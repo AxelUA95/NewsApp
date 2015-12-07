@@ -1,14 +1,18 @@
 package com.proj.andoid.localnews;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
 
+import com.proj.andoid.localnews.utils.Constants;
 import com.proj.andoid.localnews.utils.Utils;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
+import java.io.File;
+
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -32,5 +36,38 @@ public class UtilsMockTest {
         assertTrue(Utils.getScreenSize(c) == Math.sqrt(1296 + 4096) * 10);
         verify(c).getResources();
         verify(res).getDisplayMetrics();
+    }
+    @Test
+    public void testFilePath() {
+        String name = "name";
+        String flickrDir = Constants.photoFlikrDir;
+        ContextWrapper cw = mock(ContextWrapper.class);
+        File f = new File(flickrDir);
+        when(cw.getDir(flickrDir, Context.MODE_PRIVATE)).thenReturn(f);
+        assertTrue(new File(f + "/" + name + ".jpg").equals(Utils.getFilePath(cw, name)));
+        verify(cw).getDir(flickrDir, Context.MODE_PRIVATE);
+    }
+
+    @Test
+    public void testFilePathSecond() {
+        String name = "";
+        String flickDir = "dir";
+        ContextWrapper cw = mock(ContextWrapper.class);
+        File f = new File(name);
+        when(cw.getDir(flickDir, Context.MODE_PRIVATE)).thenReturn(f);
+        assertNotEquals(new File(flickDir + "/" + name + ".jpg"), Utils.getFilePath(cw, name));
+        verify(cw).getDir(Constants.photoFlikrDir, Context.MODE_PRIVATE);
+    }
+
+    @Test
+    public void testFilePathNull() {
+        String name = "hello";
+        ContextWrapper cw = mock(ContextWrapper.class);
+        try {
+            Utils.getFilePath(cw, name);
+        } catch (Exception e) {
+            verify(cw.getDir(Constants.photoFlikrDir, Context.MODE_PRIVATE));
+            assertTrue(e instanceof NullPointerException);
+        }
     }
 }
