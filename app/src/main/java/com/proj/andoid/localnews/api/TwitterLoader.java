@@ -28,6 +28,9 @@ public class TwitterLoader {
     public TwitterLoader() {
         buildTwitterConfig();
         bus = EventBus.getDefault();
+    }
+
+    public void loadByTag(String tag) {
         new getTweetsAsync().execute("Kyiv");
     }
 

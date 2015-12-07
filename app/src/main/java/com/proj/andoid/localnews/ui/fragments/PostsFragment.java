@@ -58,6 +58,7 @@ public class PostsFragment extends BaseFragment {
         recyclerView.setAdapter(adapter);
 
         twitterLoader = new TwitterLoader();
+        twitterLoader.loadByTag("");
     }
 
     @Override

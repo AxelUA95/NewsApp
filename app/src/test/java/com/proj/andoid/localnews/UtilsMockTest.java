@@ -30,7 +30,7 @@ public class UtilsMockTest {
     public Context c;
 
     @Before
-    public void setup(){
+    public void setup() {
         MockitoAnnotations.initMocks(this);
     }
 
@@ -75,7 +75,7 @@ public class UtilsMockTest {
     }
 
     @Test
-     public void testFilePath() {
+    public void testFilePath() {
         String name = "name";
         String flickrDir = Constants.photoFlikrDir;
         ContextWrapper cw = mock(ContextWrapper.class);

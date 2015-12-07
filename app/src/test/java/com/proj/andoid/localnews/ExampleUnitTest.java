@@ -22,4 +22,5 @@ public class ExampleUnitTest {
         assertEquals(value, "https://farm1.staticflickr.com/2l/23_1_z.jpg");
         assertNotEquals(value, "https://farm1.staticflickr.com/2l/23_2_z.jpg");
     }
+
 }

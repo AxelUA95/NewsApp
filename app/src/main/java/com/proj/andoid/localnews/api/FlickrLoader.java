@@ -50,6 +50,10 @@ public class FlickrLoader implements Callback<FlickrResponseModel> {
         NewsApp.getComponent().inject(this);
     }
 
+    public void setApiService(FlickrAPI flickrAPI){
+        this.apiService = flickrAPI;
+    }
+
     public void loadByLocation(Location position) {
         lastLocation = position;
         if (searchType == Constants.LOCATION_LOAD) {
