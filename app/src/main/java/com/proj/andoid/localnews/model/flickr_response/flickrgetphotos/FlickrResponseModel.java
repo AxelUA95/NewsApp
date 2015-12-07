@@ -19,4 +19,12 @@ public class FlickrResponseModel {
     public String getStat() {
         return stat;
     }
+
+    public void setPhotos(Photos photos) {
+        this.photos = photos;
+    }
+
+    public void setStat(String stat) {
+        this.stat = stat;
+    }
 }

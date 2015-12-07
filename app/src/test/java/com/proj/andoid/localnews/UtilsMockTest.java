@@ -18,7 +18,6 @@ import java.io.File;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -97,7 +96,7 @@ public class UtilsMockTest {
         verify(cw).getDir(Constants.photoFlikrDir, Context.MODE_PRIVATE);
     }
 
-    @Test
+    /*@Test
     public void testFilePathNull() {
         String name = "hello";
         try {
@@ -106,16 +105,6 @@ public class UtilsMockTest {
             verify(cw.getDir(Constants.photoFlikrDir, Context.MODE_PRIVATE));
             assertTrue(e instanceof NullPointerException);
         }
-    }
+    }*/
 
-    @Test
-    public void testInvokeDeleteRecursive(){
-        String name = "";
-        Utils utils = mock(Utils.class);
-        String flickrDir = "dir";
-        File f = new File(name);
-        when(cw.getDir(flickrDir, Context.MODE_PRIVATE)).thenReturn(f);
-        utils.cleanImageDirectory(cw);
-        verify(utils, times(1)).cleanImageDirectory(cw);
-    }
 }
