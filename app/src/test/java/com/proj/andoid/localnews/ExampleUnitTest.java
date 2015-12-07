@@ -23,9 +23,4 @@ public class ExampleUnitTest {
         assertNotEquals(value, "https://farm1.staticflickr.com/2l/23_2_z.jpg");
     }
 
-    @Test
-    public void buildFlickrUriCheck() {
-//        String value = DataContract.FlickrEntry.buildFlickrUri("java").toString();
-        assertEquals(true, true);
-    }
 }

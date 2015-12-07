@@ -7,12 +7,12 @@ import java.util.List;
 /**
  * created by Alex Ivanov on 11.10.15.
  */
-public class FlickrResponceEvent {
+public class FlickrResponseEvent {
 
     private final List<Photo> model;
     private final int searchType;
 
-    public FlickrResponceEvent(List<Photo> responseModel, int searchType) {
+    public FlickrResponseEvent(List<Photo> responseModel, int searchType) {
         model = responseModel;
         this.searchType = searchType;
     }

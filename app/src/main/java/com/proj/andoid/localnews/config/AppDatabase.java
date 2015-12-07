@@ -3,7 +3,7 @@ package com.proj.andoid.localnews.config;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.proj.andoid.localnews.events.FlickrResponceEvent;
+import com.proj.andoid.localnews.events.FlickrResponseEvent;
 import com.proj.andoid.localnews.model.DbHelper;
 import com.proj.andoid.localnews.model.flickr_response.flickrgetphotos.Photo;
 import com.proj.andoid.localnews.utils.Constants;
@@ -28,8 +28,9 @@ public class AppDatabase {
         this.context = c;
     }
 
-    public void saveFlickrData(List<Photo> photos) {
+    public Void saveFlickrData(List<Photo> photos) {
         new SaveFlickrData().execute(photos);
+        return null;
     }
 
     public void loadFlickrData() {
@@ -41,7 +42,7 @@ public class AppDatabase {
         @Override
         protected Void doInBackground(Void... params) {
             List<Photo> list = dbHelper.loadFlickrData();
-            bus.post(new FlickrResponceEvent(list, Constants.LOCATION_LOAD));
+            bus.post(new FlickrResponseEvent(list, Constants.LOCATION_LOAD));
             return null;
         }
     }

@@ -19,7 +19,7 @@ import android.widget.ProgressBar;
 
 import com.proj.andoid.localnews.R;
 import com.proj.andoid.localnews.api.FlickrLoader;
-import com.proj.andoid.localnews.events.FlickrResponceEvent;
+import com.proj.andoid.localnews.events.FlickrResponseEvent;
 import com.proj.andoid.localnews.events.LocationServiceEvent;
 import com.proj.andoid.localnews.events.NoInternetConnectionEvent;
 import com.proj.andoid.localnews.model.flickr_response.flickrgetphotos.Photo;
@@ -111,12 +111,13 @@ public class ImagesFragment extends BaseFragment {
 
     @SuppressWarnings("unused")
     @Subscribe
-    public void onEvent(FlickrResponceEvent event) {
+    public Void onEvent(FlickrResponseEvent event) {
         if (event.getSearchType() != searchType) {
             adapter.deleteAllPhotos();
         }
         adapter.addPhotos(event.getModel());
         searchType = event.getSearchType();
+        return null;
     }
 
     @SuppressWarnings("unused")
