@@ -13,4 +13,4 @@ You can add this using gradle task called setVersion it can be run by 3 differen
 3) From console, if you haven't gradle plugin, in root of News project run ./gradlew setVersion.
 ## How do I run the tests? ##
 
-For running integrational tests you need to run AndroidStudio. To work on unit tests, switch the Test Artifact in the Build Variants view. And run the tests clicking on such classes: FlickrLoaderTests, UtilsMockTest, ExampleUnitTest.
+For running integrational tests you need to run AndroidStudio. To work on unit tests, switch the Test Artifact in the Build Variants view. And run the tests rightclicking on such classes: FlickrLoaderTests, UtilsMockTest, ExampleUnitTest, TwitterLoaderTest.
