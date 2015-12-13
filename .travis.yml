@@ -6,6 +6,8 @@ android:
     - extra-android-m2repository
     - extra-google-m2repository
 
+install: ./install-dependencies.sh
+
 script:
-   - ./gradlew test --continue
-   - ./gradlew build lint
+#   - ./gradlew test --continue
+   - ./gradlew lint
