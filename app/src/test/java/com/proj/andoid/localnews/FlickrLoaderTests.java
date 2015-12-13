@@ -55,7 +55,7 @@ public class FlickrLoaderTests {
         });
         verify(flickrLoader).loadByLocation(anyString(), anyString(), response.capture());
 
-       FlickrResponseModel model = createFlickrResponseModel();
+        FlickrResponseModel model = createFlickrResponseModel();
 
         response.getValue().success(model, null);
         assertTrue(images.size() == 10);
