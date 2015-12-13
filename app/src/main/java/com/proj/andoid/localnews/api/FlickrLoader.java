@@ -79,7 +79,7 @@ public class FlickrLoader implements Callback<FlickrResponseModel> {
         return null;
     }
 
-    public void loadByTag(String tag) {
+    public void loadByTag(String tag, Callback<FlickrResponseModel> callback) {
         lastTag = tag;
         if (searchType == Constants.TAG_LOAD) {
             page++;
@@ -92,6 +92,10 @@ public class FlickrLoader implements Callback<FlickrResponseModel> {
                 "20",
                 String.valueOf(page),
                 this);
+    }
+
+    public void loadByTag(String tag) {
+        loadByTag(tag, this);
     }
 
     public void getNextPage() {
