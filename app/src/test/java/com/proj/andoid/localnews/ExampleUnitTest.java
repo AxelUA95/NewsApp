@@ -18,6 +18,11 @@ public class ExampleUnitTest {
     }
 
     @Test
+    public void dummyTest(){
+        assertEquals(6, 9-3);
+    }
+
+    @Test
     public void photoUrlCheck() {
         String value = Utils.getFlickrPhotoURL(1, "2l", "23", "1");
         assertEquals(value, "https://farm1.staticflickr.com/2l/23_1_z.jpg");
