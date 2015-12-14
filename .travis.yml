@@ -1,0 +1,12 @@
+language: android
+android:
+  components:
+    - build-tools-23.0.1
+    - android-23
+    - extra-android-m2repository
+    - extra-google-m2repository
+
+script:
+   - gradle check
+   - gradle test --continue
+   - gradle lint

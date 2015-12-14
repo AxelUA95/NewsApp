@@ -5,7 +5,6 @@ import com.proj.andoid.localnews.model.flickr_response.flickrgetphotos.FlickrRes
 import com.proj.andoid.localnews.model.flickr_response.flickrgetphotos.Photo;
 import com.proj.andoid.localnews.model.flickr_response.flickrgetphotos.Photos;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -20,7 +19,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 
@@ -56,10 +55,10 @@ public class FlickrLoaderTests {
         });
         verify(flickrLoader).loadByLocation(anyString(), anyString(), response.capture());
 
-       FlickrResponseModel model = createFlickrResponseModel();
+        FlickrResponseModel model = createFlickrResponseModel();
 
         response.getValue().success(model, null);
-        Assert.assertTrue(images.size() == 10);
+        assertTrue(images.size() == 10);
     }
 
     @Test
@@ -76,10 +75,8 @@ public class FlickrLoaderTests {
         });
         verify(flickrLoader).loadByLocation(anyString(), anyString(), response.capture());
 
-        FlickrResponseModel model = createFlickrResponseModel();
-
         response.getValue().failure(null);
-        Assert.assertTrue(images.size() == 0);
+        assertTrue(images.size() == 0);
     }
 
 
@@ -100,6 +97,7 @@ public class FlickrLoaderTests {
         photo.setPhoto(list);
         return model;
     }
+
     @Test
     public void loadByTag() {
         flickrLoader.loadByTag("tag", new Callback<FlickrResponseModel>() {

@@ -96,7 +96,7 @@ public class UtilsMockTest {
         verify(cw).getDir(Constants.photoFlikrDir, Context.MODE_PRIVATE);
     }
 
-    /*@Test
+    @Test
     public void testFilePathNull() {
         String name = "hello";
         try {
@@ -105,6 +105,6 @@ public class UtilsMockTest {
             verify(cw.getDir(Constants.photoFlikrDir, Context.MODE_PRIVATE));
             assertTrue(e instanceof NullPointerException);
         }
-    }*/
+    }
 
 }
