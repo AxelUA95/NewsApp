@@ -58,7 +58,7 @@ public class FlickrLoaderTests {
         FlickrResponseModel model = createFlickrResponseModel();
 
         response.getValue().success(model, null);
-        assertTrue(images.size() != 10);
+        assertTrue(images.size() == 10);
     }
 
     @Test
@@ -78,6 +78,7 @@ public class FlickrLoaderTests {
         response.getValue().failure(null);
         assertTrue(images.size() == 0);
     }
+
 
     private FlickrResponseModel createFlickrResponseModel() {
         FlickrResponseModel model = new FlickrResponseModel();
