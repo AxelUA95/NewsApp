@@ -20,6 +20,7 @@ import com.google.android.gms.location.LocationServices;
 import com.proj.andoid.localnews.R;
 import com.proj.andoid.localnews.events.LocationServiceEvent;
 import com.proj.andoid.localnews.ui.fragments.ImagesFragment;
+import com.proj.andoid.localnews.ui.fragments.NewsFragment;
 import com.proj.andoid.localnews.ui.fragments.PostsFragment;
 
 import butterknife.Bind;
@@ -125,7 +126,7 @@ public class MainActivity extends BaseActivity implements
                     return new ImagesFragment();
                 }
                 case 1: {
-                    return new Fragment();
+                    return new NewsFragment();
                 }
                 case 2: {
                     return new PostsFragment();

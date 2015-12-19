@@ -1,11 +1,11 @@
 package com.proj.andoid.localnews.ui.fragments;
 
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
 import android.view.ViewGroup;
@@ -109,17 +109,18 @@ public class PostsFragment extends BaseFragment {
         @Override
         public void onBindViewHolder(PostViewHolder holder, int position) {
             Status tweet = tweets.get(position);
-            Picasso.with(getActivity()).load(tweet.getUser().
-                    getBiggerProfileImageURLHttps()).
-                    memoryPolicy(MemoryPolicy.NO_CACHE).
-                    into(holder.authorImageView);
+            new LoadImage(holder.authorImageView).execute(tweet.getUser().getBiggerProfileImageURLHttps());
             holder.authorTextView.setText(tweet.getUser().getName());
             holder.createdAtTextView.setText(tweet.getCreatedAt().toString());
             String postText = tweet.getText();
             holder.postTextView.setText(postText);
+            String imgUrl = "";
             Matcher m = Patterns.WEB_URL.matcher(postText);
-            if (m.find()) {
-                Picasso.with(getActivity()).load(Uri.parse(m.group())).
+            while (m.find()) {
+                imgUrl = m.group();
+            }
+            if (!TextUtils.isEmpty(imgUrl)) {
+                Picasso.with(getActivity()).load(imgUrl).
                         memoryPolicy(MemoryPolicy.NO_CACHE).
                         into(holder.postImageView);
             }

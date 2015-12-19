@@ -12,8 +12,10 @@ import com.proj.andoid.localnews.model.flickr_response.flickrgetinfo.FlickrGetIn
 import com.proj.andoid.localnews.model.flickr_response.flickrgetphotos.FlickrResponseModel;
 import com.proj.andoid.localnews.model.flickr_response.flickrgetphotos.Photo;
 import com.proj.andoid.localnews.utils.Constants;
+import com.squareup.okhttp.OkHttpClient;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -21,12 +23,16 @@ import de.greenrobot.event.EventBus;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
+import retrofit.client.OkClient;
 import retrofit.client.Response;
 
 /**
  * created by Alex Ivanov on 11.10.15.
  */
 public class FlickrLoader implements Callback<FlickrResponseModel> {
+
+    private static final long DEFAULT_TIMEOUT = 200L;
+    private static long CURRENT_TIMEOUT = DEFAULT_TIMEOUT;
 
     @Inject
     protected AppDatabase database;
@@ -42,15 +48,12 @@ public class FlickrLoader implements Callback<FlickrResponseModel> {
     private String lastTag = "Kiev";
 
     public FlickrLoader() {
-        apiService = new RestAdapter.Builder()
-                .setEndpoint(Constants.FlickrURL)
-                .build()
-                .create(FlickrAPI.class);
+        resetTimeout();
         page = 0;
         NewsApp.getComponent().inject(this);
     }
 
-    public void setApiService(FlickrAPI flickrAPI){
+    public void setApiService(FlickrAPI flickrAPI) {
         this.apiService = flickrAPI;
     }
 
@@ -58,16 +61,19 @@ public class FlickrLoader implements Callback<FlickrResponseModel> {
         lastLocation = position;
         String lng = String.valueOf(position.getLongitude());
         String lat = String.valueOf(position.getLatitude());
-        loadByLocation(lng, lat, this);
+        loadByLocation(lng, lat, this, true);
     }
 
-    public Void loadByLocation(String lng, String lat, Callback<FlickrResponseModel> callback) {
-        if (searchType == Constants.LOCATION_LOAD) {
-            page++;
-        } else {
-            page = 1;
-            searchType = Constants.LOCATION_LOAD;
+    public void loadByLocation(final String lng, final String lat, final Callback<FlickrResponseModel> callback, boolean nextPage) {
+        if (nextPage) {
+            if (searchType == Constants.LOCATION_LOAD) {
+                page++;
+            } else {
+                page = 1;
+                searchType = Constants.LOCATION_LOAD;
+            }
         }
+
         apiService.getByLocation(
                 String.valueOf(lat),
                 String.valueOf(lng),
@@ -75,27 +81,72 @@ public class FlickrLoader implements Callback<FlickrResponseModel> {
                 "km",
                 "20",
                 String.valueOf(page),
-                callback);
-        return null;
+                new Callback<FlickrResponseModel>() {
+                    @Override
+                    public void success(FlickrResponseModel flickrResponseModel, Response response) {
+                        resetTimeout();
+                        callback.success(flickrResponseModel, response);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        increaseTimeout();
+                        loadByLocation(lng, lat, callback, false);
+                    }
+                });
     }
 
-    public void loadByTag(String tag, Callback<FlickrResponseModel> callback) {
+    private FlickrAPI setTimeout() {
+        OkHttpClient client = new OkHttpClient();
+        client.setReadTimeout(CURRENT_TIMEOUT, TimeUnit.MILLISECONDS);
+        return new RestAdapter.Builder()
+                .setEndpoint(Constants.FlickrURL)
+                .setClient(new OkClient(client))
+                .build()
+                .create(FlickrAPI.class);
+    }
+
+    public void increaseTimeout() {
+        CURRENT_TIMEOUT *= 2;
+        setApiService(setTimeout());
+    }
+
+    public void resetTimeout() {
+        CURRENT_TIMEOUT = DEFAULT_TIMEOUT;
+        setApiService(setTimeout());
+    }
+
+    public void loadByTag(final String tag, final Callback<FlickrResponseModel> callback, boolean nextPage) {
         lastTag = tag;
-        if (searchType == Constants.TAG_LOAD) {
-            page++;
-        } else {
-            page = 1;
-            searchType = Constants.TAG_LOAD;
+        if (nextPage) {
+            if (searchType == Constants.TAG_LOAD) {
+                page++;
+            } else {
+                page = 1;
+                searchType = Constants.TAG_LOAD;
+            }
         }
         apiService.getByTag(
                 tag,
                 "20",
                 String.valueOf(page),
-                this);
+                new Callback<FlickrResponseModel>() {
+                    @Override
+                    public void success(FlickrResponseModel flickrResponseModel, Response response) {
+                        resetTimeout();
+                        callback.success(flickrResponseModel, response);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        increaseTimeout();
+                        loadByTag(tag, callback, false);
+                    }
+                });
     }
 
     public void loadByTag(String tag) {
-        loadByTag(tag, this);
+        loadByTag(tag, this, true);
     }
 
     public void getNextPage() {

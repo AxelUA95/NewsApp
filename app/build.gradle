@@ -68,4 +68,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     //Mockito
     testCompile 'org.mockito:mockito-core:2.0.31-beta'
+    compile 'com.squareup.okhttp:okhttp:2.7.0'
 }
