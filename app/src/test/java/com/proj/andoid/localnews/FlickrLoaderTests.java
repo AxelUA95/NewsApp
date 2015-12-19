@@ -52,8 +52,8 @@ public class FlickrLoaderTests {
             @Override
             public void failure(RetrofitError error) {
             }
-        });
-        verify(flickrLoader).loadByLocation(anyString(), anyString(), response.capture());
+        }, true);
+        verify(flickrLoader).loadByLocation(anyString(), anyString(), response.capture(), true);
 
         FlickrResponseModel model = createFlickrResponseModel();
 
@@ -72,8 +72,8 @@ public class FlickrLoaderTests {
             @Override
             public void failure(RetrofitError error) {
             }
-        });
-        verify(flickrLoader).loadByLocation(anyString(), anyString(), response.capture());
+        }, true);
+        verify(flickrLoader).loadByLocation(anyString(), anyString(), response.capture(), true);
 
         response.getValue().failure(null);
         assertTrue(images.size() == 0);
@@ -111,8 +111,8 @@ public class FlickrLoaderTests {
             public void failure(RetrofitError error) {
                 images.clear();
             }
-        });
-        verify(flickrLoader).loadByTag(anyString(), response.capture());
+        }, true);
+        verify(flickrLoader).loadByTag(anyString(), response.capture(), true);
         FlickrResponseModel model = createFlickrResponseModel();
 
         response.getValue().success(model, null);
@@ -133,8 +133,8 @@ public class FlickrLoaderTests {
             public void failure(RetrofitError error) {
                 images.clear();
             }
-        });
-        verify(flickrLoader).loadByTag(anyString(), response.capture());
+        }, true);
+        verify(flickrLoader).loadByTag(anyString(), response.capture(), true);
 
         response.getValue().failure(null);
         assertTrue(images.size() == 0);
