@@ -28,7 +28,7 @@ android {
         minSdkVersion minSDKVersion
         targetSdkVersion targetSDKVersion
         versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch
-        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+        versionName getVersionName()
         multiDexEnabled true
     }
     buildTypes {
