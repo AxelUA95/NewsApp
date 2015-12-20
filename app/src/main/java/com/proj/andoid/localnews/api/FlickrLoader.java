@@ -57,11 +57,11 @@ public class FlickrLoader implements Callback<FlickrResponseModel> {
         this.apiService = flickrAPI;
     }
 
-    public void loadByLocation(Location position) {
+    public void loadByLocation(Location position, boolean nextPage) {
         lastLocation = position;
         String lng = String.valueOf(position.getLongitude());
         String lat = String.valueOf(position.getLatitude());
-        loadByLocation(lng, lat, this, true);
+        loadByLocation(lng, lat, this, nextPage);
     }
 
     public void loadByLocation(final String lng, final String lat, final Callback<FlickrResponseModel> callback, boolean nextPage) {
@@ -81,19 +81,7 @@ public class FlickrLoader implements Callback<FlickrResponseModel> {
                 "km",
                 "20",
                 String.valueOf(page),
-                new Callback<FlickrResponseModel>() {
-                    @Override
-                    public void success(FlickrResponseModel flickrResponseModel, Response response) {
-                        resetTimeout();
-                        callback.success(flickrResponseModel, response);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        increaseTimeout();
-                        loadByLocation(lng, lat, callback, false);
-                    }
-                });
+                callback);
     }
 
     private FlickrAPI setTimeout() {
@@ -130,30 +118,18 @@ public class FlickrLoader implements Callback<FlickrResponseModel> {
                 tag,
                 "20",
                 String.valueOf(page),
-                new Callback<FlickrResponseModel>() {
-                    @Override
-                    public void success(FlickrResponseModel flickrResponseModel, Response response) {
-                        resetTimeout();
-                        callback.success(flickrResponseModel, response);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        increaseTimeout();
-                        loadByTag(tag, callback, false);
-                    }
-                });
+                callback);
     }
 
-    public void loadByTag(String tag) {
-        loadByTag(tag, this, true);
+    public void loadByTag(String tag, boolean nextPage) {
+        loadByTag(tag, this, nextPage);
     }
 
     public void getNextPage() {
         if (searchType == Constants.LOCATION_LOAD) {
-            loadByLocation(lastLocation);
+            loadByLocation(lastLocation, true);
         } else {
-            loadByTag(lastTag);
+            loadByTag(lastTag, true);
         }
     }
 
@@ -208,7 +184,13 @@ public class FlickrLoader implements Callback<FlickrResponseModel> {
     @Override
     public void failure(RetrofitError error) {
         Log.e(tag, "Error loading flickr data ", error);
-        bus.post(new NoInternetConnectionEvent());
+        if (CURRENT_TIMEOUT < 600000) {
+            increaseTimeout();
+            loadByLocation(lastLocation, false);
+        } else {
+            resetTimeout();
+            bus.post(new NoInternetConnectionEvent());
+        }
 
     }
 

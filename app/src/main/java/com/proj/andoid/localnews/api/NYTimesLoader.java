@@ -33,18 +33,23 @@ public class NYTimesLoader {
         this.apiService = timesApi;
     }
 
-    public void loadByTag(final String tag, final Callback<NYTimesResponce> callBack){
+    public void loadByTag(final String tag, final Callback<NYTimesResponce> callback){
         apiService.getByTag(tag, new Callback<NYTimesResponce>() {
             @Override
             public void success(NYTimesResponce nyTimesResponce, Response response) {
                 resetTimeout();
-                callBack.success(nyTimesResponce, response);
+                callback.success(nyTimesResponce, response);
             }
 
             @Override
             public void failure(RetrofitError error) {
-                increaseTimeout();
-                loadByTag(tag, callBack);
+                if (CURRENT_TIMEOUT < 600000) {
+                    increaseTimeout();
+                    loadByTag(tag, callback);
+                } else {
+                    resetTimeout();
+                    callback.failure(error);
+                }
             }
         });
     }

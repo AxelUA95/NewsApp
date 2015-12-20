@@ -20,6 +20,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 
@@ -53,7 +54,7 @@ public class FlickrLoaderTests {
             public void failure(RetrofitError error) {
             }
         }, true);
-        verify(flickrLoader).loadByLocation(anyString(), anyString(), response.capture(), true);
+        verify(flickrLoader).loadByLocation(anyString(), anyString(), response.capture(), anyBoolean());
 
         FlickrResponseModel model = createFlickrResponseModel();
 
@@ -73,7 +74,7 @@ public class FlickrLoaderTests {
             public void failure(RetrofitError error) {
             }
         }, true);
-        verify(flickrLoader).loadByLocation(anyString(), anyString(), response.capture(), true);
+        verify(flickrLoader).loadByLocation(anyString(), anyString(), response.capture(), anyBoolean());
 
         response.getValue().failure(null);
         assertTrue(images.size() == 0);
@@ -112,7 +113,7 @@ public class FlickrLoaderTests {
                 images.clear();
             }
         }, true);
-        verify(flickrLoader).loadByTag(anyString(), response.capture(), true);
+        verify(flickrLoader).loadByTag(anyString(), response.capture(), anyBoolean());
         FlickrResponseModel model = createFlickrResponseModel();
 
         response.getValue().success(model, null);
@@ -134,7 +135,7 @@ public class FlickrLoaderTests {
                 images.clear();
             }
         }, true);
-        verify(flickrLoader).loadByTag(anyString(), response.capture(), true);
+        verify(flickrLoader).loadByTag(anyString(), response.capture(), anyBoolean());
 
         response.getValue().failure(null);
         assertTrue(images.size() == 0);

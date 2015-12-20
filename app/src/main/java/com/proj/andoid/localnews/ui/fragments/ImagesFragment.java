@@ -93,7 +93,7 @@ public class ImagesFragment extends BaseFragment {
         loader = new FlickrLoader();
         Location location = loader.getLastLocation();
         if (location != null) {
-            loader.loadByLocation(location);
+            loader.loadByLocation(location, true);
         }
     }
 
@@ -135,7 +135,7 @@ public class ImagesFragment extends BaseFragment {
     @SuppressWarnings("unused")
     @Subscribe
     public void onEvent(LocationServiceEvent event) {
-        loader.loadByLocation(event.getLocation());
+        loader.loadByLocation(event.getLocation(), true);
     }
 
     private class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
