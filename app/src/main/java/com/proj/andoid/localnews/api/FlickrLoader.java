@@ -186,7 +186,11 @@ public class FlickrLoader implements Callback<FlickrResponseModel> {
         Log.e(tag, "Error loading flickr data ", error);
         if (CURRENT_TIMEOUT < 600000) {
             increaseTimeout();
-            loadByLocation(lastLocation, false);
+            if (lastLocation != null) {
+                loadByLocation(lastLocation, false);
+            } else {
+                loadByTag(lastTag, false);
+            }
         } else {
             resetTimeout();
             bus.post(new NoInternetConnectionEvent());

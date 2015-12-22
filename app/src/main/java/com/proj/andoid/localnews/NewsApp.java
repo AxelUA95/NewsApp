@@ -1,6 +1,6 @@
 package com.proj.andoid.localnews;
 
-import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 
 import com.proj.andoid.localnews.config.AppComponent;
 import com.proj.andoid.localnews.config.AppModule;
@@ -9,7 +9,7 @@ import com.proj.andoid.localnews.config.DaggerAppComponent;
 /**
  * created by Alex Ivanov on 10.10.15.
  */
-public class NewsApp extends Application {
+public class NewsApp extends MultiDexApplication {
 
     private static AppComponent component;
 

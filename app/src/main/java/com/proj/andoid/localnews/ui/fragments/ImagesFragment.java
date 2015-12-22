@@ -94,6 +94,8 @@ public class ImagesFragment extends BaseFragment {
         Location location = loader.getLastLocation();
         if (location != null) {
             loader.loadByLocation(location, true);
+        } else {
+            loader.loadByTag("Kiev", true);
         }
     }
 
